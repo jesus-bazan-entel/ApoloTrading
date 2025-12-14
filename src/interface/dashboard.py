@@ -120,6 +120,13 @@ def load_data():
 st.title("🏛️ Apolo Trading System (TradeMind AI)")
 st.markdown("Returns Consistent | Risk Controlled | Fully Automated")
 
+# --- IMPORTS FOR ACTIONS ---
+from sqlalchemy.orm import sessionmaker
+from src.infrastructure.database.models import AccountState, RiskState
+from datetime import datetime
+
+# ... (Previous code remains, we insert logic after load_data call)
+
 trades_df, account_df = load_data()
 
 # --- SIDEBAR FILTERS ---
@@ -146,10 +153,8 @@ else:
 
 # Filter Logic
 filtered_trades = trades_df.copy()
-
 if not trades_df.empty and len(date_range) == 2:
     start_d, end_d = date_range
-    # Ensure pandas datetime comparison works
     filtered_trades['entry_time'] = pd.to_datetime(filtered_trades['entry_time'])
     mask = (filtered_trades['entry_time'].dt.date >= start_d) & (filtered_trades['entry_time'].dt.date <= end_d)
     filtered_trades = filtered_trades[mask]
@@ -157,8 +162,63 @@ if not trades_df.empty and len(date_range) == 2:
     if selected_strategies:
         filtered_trades = filtered_trades[filtered_trades['strategy_type'].isin(selected_strategies)]
 
+# --- MAIN DASHBOARD LOGIC ---
 
-if not account_df.empty:
+if account_df.empty:
+    # NEW USER - ACTIVATION FLOW
+    st.info("👋 Welcome to Apolo Trading!")
+    
+    col_act1, col_act2 = st.columns([2, 1])
+    
+    with col_act1:
+        st.markdown(
+            """
+            ### 🚀 Activate Your Portfolio
+            
+            You have been approved for a funded account but your portfolio is currently **inactive**.
+            
+            By activating, you subscribe your capital to the **TradeMind AI** global strategies.
+            """
+        )
+        
+        user_capital = st.session_state.user.get('config', {}).get('capital', 100000)
+        
+        st.metric("Approved Capital", f"${user_capital:,.2f}")
+        
+        if st.button("Activate Portfolio Now", type="primary"):
+            try:
+                Session = sessionmaker(bind=engine)
+                session = Session()
+                
+                new_state = AccountState(
+                    user_id=st.session_state.user['id'],
+                    equity=user_capital,
+                    balance=user_capital,
+                    risk_state=RiskState.NORMAL,
+                    drawdown_pct=0.0,
+                    daily_trades_count=0,
+                    timestamp=datetime.utcnow()
+                )
+                session.add(new_state)
+                session.commit()
+                session.close()
+                
+                st.success("Portfolio Activated! Redirecting...")
+                time.sleep(1)
+                st.rerun()
+            except Exception as e:
+                st.error(f"Activation Failed: {e}")
+
+    with col_act2:
+        st.write("#### Global Market Preview")
+        st.dataframe(
+            filtered_trades.head(5)[['symbol', 'strategy_type', 'pnl']], 
+            use_container_width=True,
+            hide_index=True
+        )
+
+else:
+    # ACTIVE USER DASHBOARD
     latest_state = account_df.iloc[-1]
     
     # --- TABS LAYOUT ---
@@ -172,38 +232,35 @@ if not account_df.empty:
                 "Equity", 
                 f"${latest_state['equity']:,.2f}", 
                 delta=None,
-                help="**Total Capital**\n\nCurrent value of the account including open positions.\n\n⚠️ **Alert**: If Equity drops below initial capital ($100k)."
+                help="Current value including open positions."
             )
         with col2:
             risk_color = "normal" if latest_state['risk_state'] == "NORMAL" else "off"
             st.metric(
                 "Risk State", 
                 latest_state['risk_state'], 
-                delta_color=risk_color,
-                help="**Risk Management Mode**\n\n- **NORMAL**: Full size trading.\n- **DEFENSIVE**: Half size (DD > 4%).\n- **HALT**: Stop trading (DD > 8%)."
+                delta_color=risk_color
             )
         with col3:
             st.metric(
                 "Drawdown", 
                 f"{latest_state['drawdown_pct']:.2%}", 
-                delta_color="inverse",
-                help="**Peak-to-Valley Decline**\n\nPercentage lost from the highest equity point (High Water Mark).\n\n⚠️ **Limits**: \n- > 4%: Defensive Mode\n- > 8%: Hard Stop"
+                delta_color="inverse"
             )
         with col4:
             st.metric(
                 "Daily Trades", 
-                latest_state['daily_trades_count'],
-                help="**Volume Tracker**\n\nNumber of trades executed today.\n\nℹ️ **Typical**: 1-3 trades/day."
+                latest_state['daily_trades_count']
             )
 
         # Equity Curve
-        st.subheader("Equity Curve", help="Visualizes the growth of account capital over time.")
+        st.subheader("Equity Curve")
         if not account_df.empty:
             fig_eq = px.line(account_df, x='timestamp', y='equity', title='Account Equity Over Time')
             st.plotly_chart(fig_eq, use_container_width=True)
 
     with tab_analytics:
-        st.subheader("Drawdown Analysis", help="Shows the depth of losses relative to the peak. Deeper areas indicate higher risk periods.")
+        st.subheader("Drawdown Analysis")
         if not account_df.empty:
             account_df['dd_pct'] = account_df['drawdown_pct'] * 100
             fig_dd = px.area(account_df, x='timestamp', y='dd_pct', title='Drawdown %')
@@ -214,12 +271,10 @@ if not account_df.empty:
         st.subheader("Recent Trades Log")
         
         if not filtered_trades.empty:
-            # Color Coding Function
             def color_pnl(val):
                 color = '#2ecc71' if val > 0 else '#e74c3c'
                 return f'color: {color}; font-weight: bold'
 
-            # Display Dataframe with Style
             st.dataframe(
                 filtered_trades.style.map(color_pnl, subset=['pnl'])
                 .format({'pnl': "${:,.2f}", 'entry_credit': "${:,.2f}", 'max_risk': "${:,.2f}", 'entry_time': "{:%Y-%m-%d %H:%M}"}),
@@ -235,15 +290,12 @@ if not account_df.empty:
         else:
             st.info("No trades found matching the filters.")
 
-else:
-    st.warning(f"Welcome {st.session_state.user['username']}! No trading data found for your account yet.")
-
 # Sidebar - Advanced Metrics
 st.sidebar.header("Advanced Risk Metrics")
 st.sidebar.markdown("---")
-st.sidebar.metric("Sharpe Ratio (Rolling)", "1.24", help="**Risk-Adjusted Return**\n\n> 1.0 is considered good.") 
-st.sidebar.metric("Profit Factor", "1.5", help="**Gross Profit / Gross Loss**\n\n> 1.5 is the target.")
-st.sidebar.metric("Expectancy", "$45.00", help="**Average PnL per Trade**\n\nMust be positive for long-term profitability.")
+st.sidebar.metric("Sharpe Ratio (Rolling)", "1.24") 
+st.sidebar.metric("Profit Factor", "1.5")
+st.sidebar.metric("Expectancy", "$45.00")
 
 # Auto-refresh
 if st.checkbox("Auto-refresh (5s)", value=True):
