@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
-from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Enum, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Float, DateTime, Enum, ForeignKey, JSON, Boolean
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker, Session
 import enum
 
@@ -22,10 +22,25 @@ class StrategyType(str, enum.Enum):
     BEAR_CALL_SPREAD = "BEAR_CALL_SPREAD"
     IRON_CONDOR = "IRON_CONDOR"
 
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+    role = Column(String, default="USER") # ADMIN or USER
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Configuration (JSON) to store custom risk params, capital, etc.
+    config = Column(JSON, default={}) 
+
 class Trade(Base):
     __tablename__ = 'trades'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    # user_id removed - Trades are GLOBAL
+    
     strategy_type = Column(Enum(StrategyType), nullable=False)
     symbol = Column(String, nullable=False)
     entry_time = Column(DateTime, default=datetime.utcnow)
@@ -67,6 +82,8 @@ class AccountState(Base):
     __tablename__ = 'account_state'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=True)
+    
     timestamp = Column(DateTime, default=datetime.utcnow)
     equity = Column(Float, nullable=False)
     balance = Column(Float, nullable=False)

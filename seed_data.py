@@ -1,20 +1,28 @@
 import random
 from datetime import datetime, timedelta
-from src.infrastructure.database.models import db, Trade, AccountState, RiskState, TradeStatus, StrategyType
+from src.infrastructure.database.models import db, Trade, AccountState, RiskState, TradeStatus, StrategyType, User
 
 def seed():
     session = db.get_session()
     
-    # Clear existing
-    session.query(Trade).delete()
-    session.query(AccountState).delete()
+    # Get Admin User
+    admin = session.query(User).filter_by(username="admin").first()
+    if not admin:
+        print("❌ Admin user not found. Please run reset_db.py first.")
+        return
+
+    # Clear existing data for this user
+    # Global trades could be cleared or kept? For reset, let's clear ALL.
+    session.query(Trade).delete() 
+    session.query(AccountState).filter_by(user_id=admin.id).delete()
     
-    print("Seeding Database with 30 days of Prop Firm history...")
+    print(f"Seeding Database (Global Trades + Admin State)...")
     
     current_equity = 100000.0
     start_date = datetime.now() - timedelta(days=30)
     
     session.add(AccountState(
+        user_id=admin.id,
         timestamp=start_date,
         equity=current_equity,
         balance=current_equity,
@@ -44,6 +52,7 @@ def seed():
             current_equity += pnl
             
             t = Trade(
+                # Global Trade - No user_id
                 strategy_type=strat,
                 symbol=sym,
                 entry_time=current_date + timedelta(hours=random.randint(9, 15)),
@@ -64,6 +73,7 @@ def seed():
         if dd > 0.08: state_enum = RiskState.HALT
         
         acc = AccountState(
+            user_id=admin.id,
             timestamp=current_date.replace(hour=16, minute=0),
             equity=current_equity,
             balance=current_equity,
