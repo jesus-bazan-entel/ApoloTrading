@@ -4,16 +4,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from sqlalchemy import create_engine
 import time
-
-# Dashboard Configuration
-st.set_page_config(
-    page_title="Apolo Trading | Prop Desk",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# Database Connection
-# Database Connection
 import os
 import sys
 from dotenv import load_dotenv
@@ -24,6 +14,68 @@ sys.path.append(PROJECT_ROOT)
 
 load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
 
+# Dashboard Configuration
+st.set_page_config(
+    page_title="Apolo Trading | Prop Desk",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- AUTHENTICATION & SESSION ---
+if 'user' not in st.session_state:
+    st.session_state.user = None
+
+def login_page():
+    st.markdown(
+        """
+        <style>
+        .stTextInput > div > div > input {
+            text-align: center; 
+        }
+        </style>
+        """, unsafe_allow_html=True
+    )
+    
+    col1, col2, col3 = st.columns([1,2,1])
+    with col2:
+        st.title("🔐 Apolo Trading Access")
+        st.markdown("Please sign in to access your dashboard.")
+        
+        username = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        
+        if st.button("Login", use_container_width=True):
+            from src.infrastructure.auth import AuthService
+            auth = AuthService()
+            try:
+                user = auth.login(username, password)
+                if user:
+                    st.session_state.user = {"id": user.id, "username": user.username, "role": user.role, "config": user.config}
+                    st.success(f"Welcome back, {user.username}!")
+                    st.rerun()
+                else:
+                    st.error("Invalid username or password")
+            except Exception as e:
+                st.error(f"Login error: {str(e)}")
+
+def logout():
+    st.session_state.user = None
+    st.rerun()
+
+if not st.session_state.user:
+    login_page()
+    st.stop() # Stop execution here if not logged in
+
+# --- LOGGED IN USER DASHBOARD ---
+
+# Sidebar Profile
+with st.sidebar:
+    st.write(f"👤 **{st.session_state.user['username']}** ({st.session_state.user['role']})")
+    if st.button("Log Out"):
+        logout()
+    st.markdown("---")
+
+# Database Connection
 DB_URL = os.getenv("DATABASE_URL")
 if DB_URL:
     if DB_URL.startswith("postgres://"):
@@ -38,8 +90,14 @@ engine = create_engine(DB_URL)
 
 def load_data():
     try:
+        # Load trades (GLOBAL)
         trades = pd.read_sql("SELECT * FROM trades", engine)
-        account = pd.read_sql("SELECT * FROM account_state", engine)
+        
+        # Load Account State (USER SPECIFIC)
+        user_id = st.session_state.user['id']
+        account_query = f"SELECT * FROM account_state WHERE user_id = {user_id}"
+        account = pd.read_sql(account_query, engine)
+        
         return trades, account
     except Exception as e:
         st.error(f"Error loading data: {e}")
@@ -48,8 +106,6 @@ def load_data():
 # Main Header
 st.title("🏛️ Apolo Trading System (TradeMind AI)")
 st.markdown("Returns Consistent | Risk Controlled | Fully Automated")
-
-# Auto-refresh
 
 trades_df, account_df = load_data()
 
@@ -77,7 +133,6 @@ else:
 
 # Filter Logic
 filtered_trades = trades_df.copy()
-filtered_account = account_df.copy()
 
 if not trades_df.empty and len(date_range) == 2:
     start_d, end_d = date_range
@@ -168,7 +223,7 @@ if not account_df.empty:
             st.info("No trades found matching the filters.")
 
 else:
-    st.warning("Waiting for System Data...")
+    st.warning(f"Welcome {st.session_state.user['username']}! No trading data found for your account yet.")
 
 # Sidebar - Advanced Metrics
 st.sidebar.header("Advanced Risk Metrics")
