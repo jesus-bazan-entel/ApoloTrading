@@ -92,6 +92,31 @@ with st.sidebar:
     
     if st.button("Log Out"):
         logout()
+    
+    st.markdown("---")
+    
+    with st.expander("🔐 Change Password"):
+        with st.form("passwd_form", clear_on_submit=True):
+             cur_pass = st.text_input("Current Password", type="password")
+             new_pass = st.text_input("New Password", type="password")
+             conf_pass = st.text_input("Confirm New Password", type="password")
+             
+             if st.form_submit_button("Update Password"):
+                 if new_pass == conf_pass and new_pass:
+                     from src.infrastructure.auth import AuthService
+                     try:
+                         auth = AuthService()
+                         # Verify current first
+                         if auth.login(st.session_state.user['username'], cur_pass):
+                             auth.reset_password(st.session_state.user['id'], new_pass)
+                             st.success("Password updated!")
+                         else:
+                             st.error("Incorrect current password.")
+                     except Exception as e:
+                         st.error(f"Error: {e}")
+                 else:
+                     st.error("Passwords do not match.")
+
     st.markdown("---")
 
 # Routing
