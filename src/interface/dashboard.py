@@ -71,9 +71,22 @@ if not st.session_state.user:
 # Sidebar Profile
 with st.sidebar:
     st.write(f"👤 **{st.session_state.user['username']}** ({st.session_state.user['role']})")
+    
+    # Navigation for Admins
+    if st.session_state.user['role'] == "ADMIN":
+        page = st.radio("Navigate", ["Dashboard", "Admin Panel"])
+    else:
+        page = "Dashboard"
+    
     if st.button("Log Out"):
         logout()
     st.markdown("---")
+
+# Routing
+if page == "Admin Panel":
+    from src.interface.admin_panel import render_admin_panel
+    render_admin_panel()
+    st.stop() # Stop here so dashboard doesn't render below
 
 # Database Connection
 DB_URL = os.getenv("DATABASE_URL")
