@@ -33,46 +33,34 @@ def login_page():
         [data-testid="stAppViewContainer"] {
             background-color: #f0f2f6;
         }
-        /* Make all headings and text dark gray for contrast */
-        h1, h2, h3, p, div, label, span {
+        /* Text Color Override */
+        h1, h2, h3, p, div, label, span, input {
             color: #31333F !important;
         }
         
-        /* -- Input Uniformity Fix (Aggressive) -- */
-        /* Force Input Boxes to handle padding correctly */
-        [data-testid="stTextInput"] {
-            width: 100% !important;
-        }
-        .stTextInput > div > div {
-            background-color: #ffffff;
-            border: 1px solid #d6d6d6;
-            border-radius: 5px;
-            /* Ensure box sizing includes padding so widths match exactly */
-            box-sizing: border-box !important; 
-        }
-        
-        /* Button focus */
+        /* Button Styling */
         div.stButton > button {
             background-color: #ff4b4b;
             color: white;
             font-weight: bold;
             box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
-            width: 100% !important; /* Force button full width to match inputs */
+            width: 100% !important;
             border-radius: 5px;
+            border: none;
         }
         
-        /* Card container shadow - Clean alignment */
+        /* Clean Card Container */
         [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
             background-color: white;
-            padding: 3rem; /* Increase padding for better breathing room */
+            padding: 3rem;
             border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         </style>
         """, unsafe_allow_html=True
     )
     
-    # Centered Layout with more defined column ratio
+    # Centered Layout
     col1, col2, col3 = st.columns([1, 1, 1])
     
     with col2:
