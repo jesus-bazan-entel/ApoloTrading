@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+import importlib
+import src.infrastructure.auth
+importlib.reload(src.infrastructure.auth)
 from src.infrastructure.auth import AuthService
 
 def render_admin_panel():
