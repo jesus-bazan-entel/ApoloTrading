@@ -36,5 +36,35 @@ class AuthService:
     def login(self, username, password):
         user = self.get_user_by_username(username)
         if user and self.verify_password(password, user.password_hash):
+            if not user.is_active:
+                return None # Account disabled
             return user
         return None
+
+    # --- ADMIN METHODS ---
+    def get_all_users(self):
+        return self.session.query(User).all()
+
+    def update_user_status(self, user_id, is_active: bool):
+        user = self.session.query(User).get(user_id)
+        if user and user.username != "admin": # Prevent disabling main admin
+            user.is_active = is_active
+            self.session.commit()
+            return True
+        return False
+
+    def delete_user(self, user_id):
+        user = self.session.query(User).get(user_id)
+        if user and user.username != "admin": # Prevent deleting main admin
+            self.session.delete(user)
+            self.session.commit()
+            return True
+        return False
+        
+    def reset_password(self, user_id, new_password):
+        user = self.session.query(User).get(user_id)
+        if user:
+            user.password_hash = self.hash_password(new_password)
+            self.session.commit()
+            return True
+        return False
