@@ -26,37 +26,61 @@ if 'user' not in st.session_state:
     st.session_state.user = None
 
 def login_page():
+    # Custom CSS for Modern Dark UI
     st.markdown(
         """
         <style>
+        [data-testid="stAppViewContainer"] {
+            background-color: #0e1117;
+        }
         .stTextInput > div > div > input {
-            text-align: center; 
+            text-align: left; 
         }
         </style>
         """, unsafe_allow_html=True
     )
     
-    col1, col2, col3 = st.columns([1,2,1])
+    # Centered Layout
+    col1, col2, col3 = st.columns([1, 1.2, 1])
+    
     with col2:
-        st.title("🔐 Apolo Trading Access")
-        st.markdown("Please sign in to access your dashboard.")
+        # Logo/Icon Area
+        st.markdown("<h1 style='text-align: center; font-size: 80px; margin-bottom: -20px;'>🏛️</h1>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; margin-bottom: 40px;'>Apolo Trading System</h2>", unsafe_allow_html=True)
         
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
+        with st.container(border=True):
+            st.markdown("### 🔐 Secure Access")
+            
+            username = st.text_input("Identity", placeholder="Username")
+            password = st.text_input("Key", type="password", placeholder="Password")
+            
+            st.markdown(" ") # Spacer
+            
+            if st.button("Authenticate", type="primary", use_container_width=True):
+                from src.infrastructure.auth import AuthService
+                with st.spinner("Verifying credentials..."):
+                    auth = AuthService()
+                    try:
+                        time.sleep(0.5) # UX Delay for "processing" feel
+                        user = auth.login(username, password)
+                        if user:
+                            st.session_state.user = {"id": user.id, "username": user.username, "role": user.role, "config": user.config}
+                            st.toast(f"Access Granted. Welcome {user.username}.", icon="🔓")
+                            time.sleep(1)
+                            st.rerun()
+                        else:
+                            st.error("Access Denied: Invalid Credentials")
+                    except Exception as e:
+                        st.error(f"System Error: {str(e)}")
         
-        if st.button("Login", use_container_width=True):
-            from src.infrastructure.auth import AuthService
-            auth = AuthService()
-            try:
-                user = auth.login(username, password)
-                if user:
-                    st.session_state.user = {"id": user.id, "username": user.username, "role": user.role, "config": user.config}
-                    st.success(f"Welcome back, {user.username}!")
-                    st.rerun()
-                else:
-                    st.error("Invalid username or password")
-            except Exception as e:
-                st.error(f"Login error: {str(e)}")
+        st.markdown(
+            """
+            <div style='text-align: center; font-size: 12px; color: #666; margin-top: 20px;'>
+            Restricted Access • TradeMind AI Quant Engine<br>
+            © 2025 Apolo Financials
+            </div>
+            """, unsafe_allow_html=True
+        )
 
 def logout():
     st.session_state.user = None
