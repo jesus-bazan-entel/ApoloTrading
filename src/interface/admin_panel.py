@@ -5,8 +5,12 @@ from src.infrastructure.auth import AuthService
 def render_admin_panel():
     st.title("🛡️ User Management Panel")
     
-    auth = AuthService()
-    
+    try:
+        auth = AuthService()
+    except Exception as e:
+        st.error(f"Database Connection Error: {e}")
+        return
+
     # 1. Create New User Section
     with st.expander("➕ Create New User", expanded=False):
         with st.form("create_user_form"):
@@ -44,7 +48,11 @@ def render_admin_panel():
     # 2. List Users
     st.subheader("Existing Users")
     
-    users = auth.get_all_users()
+    try:
+        users = auth.get_all_users()
+    except Exception as e:
+        st.error(f"Error fetching users: {e}")
+        return
     
     if not users:
         st.info("No users found.")
