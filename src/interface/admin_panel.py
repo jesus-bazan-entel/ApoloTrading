@@ -64,40 +64,62 @@ def render_admin_panel():
     # Convert to DF for easier display if needed, but we want actions per row
     # So iterating is better for buttons
     
+    # Header Row
+    cols = st.columns([1, 2, 2, 2, 4])
+    cols[0].markdown("**ID**")
+    cols[1].markdown("**User**")
+    cols[2].markdown("**Role**")
+    cols[3].markdown("**Status**")
+    cols[4].markdown("**Actions**")
+    st.divider()
+
     for user in users:
         # Don't allow editing the main admin this way to prevent lockout
         is_protected = (user.username == "admin")
         
-        col_id, col_user, col_role, col_status, col_actions = st.columns([1, 2, 2, 2, 4])
-        
-        with col_id:
-            st.write(f"#{user.id}")
-        with col_user:
-            st.write(f"**{user.username}**")
-        with col_role:
-            st.caption(user.role)
-        with col_status:
-            status_color = "green" if user.is_active else "red"
-            st.markdown(f":{status_color}[{'Active' if user.is_active else 'Disabled'}]")
-        
-        with col_actions:
-            if not is_protected:
-                # Toggle Status
-                btn_label = "Disable" if user.is_active else "Enable"
-                if st.button(btn_label, key=f"status_{user.id}"):
-                    auth.update_user_status(user.id, not user.is_active)
-                    st.rerun()
-                
-                # Reset Pass
-                if st.button("Reset Pass", key=f"rst_{user.id}"):
-                    auth.reset_password(user.id, "123456")
-                    st.toast(f"Password for {user.username} reset to '123456'")
-                
-                # Delete
-                if st.button("🗑️", key=f"del_{user.id}", type="primary"):
-                    auth.delete_user(user.id)
-                    st.rerun()
-            else:
-                st.caption("Protected")
-        
-        st.divider()
+        with st.container():
+            col_id, col_user, col_role, col_status, col_actions = st.columns([1, 2, 2, 2, 4])
+            
+            with col_id:
+                st.write(f"#{user.id}")
+            with col_user:
+                st.write(f"👤 **{user.username}**")
+            with col_role:
+                if user.role == "ADMIN":
+                    st.markdown("🛡️ `ADMIN`")
+                else:
+                    st.markdown("👤 `USER`")
+            with col_status:
+                if user.is_active:
+                    st.success("Active", icon="✅")
+                else:
+                    st.error("Disabled", icon="⛔")
+            
+            with col_actions:
+                if not is_protected:
+                    c1, c2, c3 = st.columns(3)
+                    
+                    # Toggle Status
+                    with c1:
+                        icon = "⛔" if user.is_active else "✅"
+                        label = "Disable" if user.is_active else "Enable"
+                        help_text = "Suspend access" if user.is_active else "Restore access"
+                        if st.button(icon, key=f"status_{user.id}", help=f"{label} account"):
+                            auth.update_user_status(user.id, not user.is_active)
+                            st.rerun()
+                    
+                    # Reset Pass
+                    with c2:
+                        if st.button("🔑", key=f"rst_{user.id}", help="Reset password to '123456'"):
+                            auth.reset_password(user.id, "123456")
+                            st.toast(f"Password for {user.username} reset to '123456'")
+                    
+                    # Delete
+                    with c3:
+                        if st.button("🗑️", key=f"del_{user.id}", type="primary", help="Delete user permanently"):
+                            auth.delete_user(user.id)
+                            st.rerun()
+                else:
+                    st.caption("🔒 System Admin")
+            
+            st.divider()
