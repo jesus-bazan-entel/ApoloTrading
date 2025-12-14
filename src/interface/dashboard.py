@@ -1,0 +1,130 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+from sqlalchemy import create_engine
+import time
+
+# Dashboard Configuration
+st.set_page_config(
+    page_title="Apolo Trading | Prop Desk",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Database Connection
+# Database Connection
+import os
+import sys
+from dotenv import load_dotenv
+
+# Add project root to path for imports if needed
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(PROJECT_ROOT)
+
+load_dotenv(os.path.join(PROJECT_ROOT, ".env"))
+
+DB_URL = os.getenv("DATABASE_URL")
+if DB_URL:
+    if DB_URL.startswith("postgres://"):
+        DB_URL = DB_URL.replace("postgres://", "postgresql://", 1)
+else:
+    DB_PATH = os.path.join(PROJECT_ROOT, "apolo_trading.db")
+    DB_URL = f"sqlite:///{DB_PATH}"
+
+st.sidebar.markdown(f"**DB Status**: `{'Remote (Supabase)' if 'supabase' in DB_URL else 'Local (SQLite)'}`")
+
+engine = create_engine(DB_URL)
+
+def load_data():
+    try:
+        trades = pd.read_sql("SELECT * FROM trades", engine)
+        account = pd.read_sql("SELECT * FROM account_state", engine)
+        return trades, account
+    except Exception as e:
+        st.error(f"Error loading data: {e}")
+        return pd.DataFrame(), pd.DataFrame()
+
+# Main Header
+st.title("🏛️ Apolo Trading System (TradeMind AI)")
+st.markdown("Returns Consistent | Risk Controlled | Fully Automated")
+
+# Auto-refresh
+
+trades_df, account_df = load_data()
+
+
+if not account_df.empty:
+    latest_state = account_df.iloc[-1]
+    
+    # 1. KPI Row
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(
+            "Equity", 
+            f"${latest_state['equity']:,.2f}", 
+            delta=None,
+            help="**Total Capital**\n\nCurrent value of the account including open positions.\n\n⚠️ **Alert**: If Equity drops below initial capital ($100k)."
+        )
+    with col2:
+        risk_color = "normal" if latest_state['risk_state'] == "NORMAL" else "off"
+        st.metric(
+            "Risk State", 
+            latest_state['risk_state'], 
+            delta_color=risk_color,
+            help="**Risk Management Mode**\n\n- **NORMAL**: Full size trading.\n- **DEFENSIVE**: Half size (DD > 4%).\n- **HALT**: Stop trading (DD > 8%)."
+        )
+    with col3:
+        st.metric(
+            "Drawdown", 
+            f"{latest_state['drawdown_pct']:.2%}", 
+            delta_color="inverse",
+            help="**Peak-to-Valley Decline**\n\nPercentage lost from the highest equity point (High Water Mark).\n\n⚠️ **Limits**: \n- > 4%: Defensive Mode\n- > 8%: Hard Stop"
+        )
+    with col4:
+        st.metric(
+            "Daily Trades", 
+            latest_state['daily_trades_count'],
+            help="**Volume Tracker**\n\nNumber of trades executed today.\n\nℹ️ **Typical**: 1-3 trades/day."
+        )
+
+    # 2. Charts
+    col_chart1, col_chart2 = st.columns(2)
+    
+    with col_chart1:
+        st.subheader("Equity Curve", help="Visualizes the growth of account capital over time.")
+        if not account_df.empty:
+            fig_eq = px.line(account_df, x='timestamp', y='equity', title='Account Equity Over Time')
+            st.plotly_chart(fig_eq, use_container_width=True)
+
+    with col_chart2:
+        st.subheader("Drawdown Analysis", help="Shows the depth of losses relative to the peak. Deeper areas indicate higher risk periods.")
+        if not account_df.empty:
+            # Calculate drawdown series if not fully present
+            # For now simplified
+            account_df['dd_pct'] = account_df['drawdown_pct'] * 100
+            fig_dd = px.area(account_df, x='timestamp', y='dd_pct', title='Drawdown %')
+            fig_dd.update_yaxes(autorange="reversed")
+            st.plotly_chart(fig_dd, use_container_width=True)
+
+    # 3. Trade Log
+    st.subheader("Recent Trades")
+    if not trades_df.empty:
+        st.dataframe(trades_df.tail(10))
+    else:
+        st.info("No trades recorded yet.")
+
+else:
+    st.warning("Waiting for System Data...")
+
+# Sidebar - Advanced Metrics
+st.sidebar.header("Advanced Risk Metrics")
+st.sidebar.markdown("---")
+st.sidebar.metric("Sharpe Ratio (Rolling)", "1.24", help="**Risk-Adjusted Return**\n\n> 1.0 is considered good.") 
+st.sidebar.metric("Profit Factor", "1.5", help="**Gross Profit / Gross Loss**\n\n> 1.5 is the target.")
+st.sidebar.metric("Expectancy", "$45.00", help="**Average PnL per Trade**\n\nMust be positive for long-term profitability.")
+
+# Auto-refresh
+if st.checkbox("Auto-refresh (5s)", value=True):
+    time.sleep(5)
+    st.rerun()

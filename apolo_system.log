@@ -1,0 +1,1085 @@
+2025-12-14 00:44:31,250 - EventBus - INFO - Subscribed on_signal to SIGNAL
+2025-12-14 00:44:31,254 - EventBus - INFO - Subscribed on_fill to ORDER_FILL
+2025-12-14 00:44:31,254 - EventBus - INFO - Subscribed on_order_request to ORDER_REQUEST
+2025-12-14 00:44:31,254 - EventBus - INFO - Subscribed on_market_data to MARKET_DATA
+2025-12-14 00:44:31,255 - EventBus - INFO - Subscribed on_market_data to MARKET_DATA
+2025-12-14 00:44:31,271 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,276 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,280 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,283 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,286 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,289 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,497 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,508 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,510 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,512 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,515 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,518 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,723 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,727 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,729 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,732 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,735 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,738 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,941 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,942 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,943 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,944 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,945 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:31,946 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,148 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,152 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,156 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,160 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,167 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,173 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,377 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,379 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,380 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,382 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,383 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,384 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,587 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,591 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,594 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,598 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,604 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,609 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,812 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,813 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,814 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,815 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,817 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:32,819 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,037 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,045 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,047 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,049 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,051 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,055 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,258 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,259 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,260 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,261 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,262 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,263 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,464 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,466 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,467 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,468 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,469 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,471 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,674 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,677 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,681 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,684 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,688 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,691 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,896 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,900 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,904 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,908 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,912 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:33,917 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,121 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,122 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,124 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,125 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,126 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,127 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,355 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,356 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,358 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,360 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,361 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,363 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,565 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,566 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,567 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,568 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,570 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,571 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,774 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,778 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,782 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,786 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,791 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,795 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:34,999 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,000 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,001 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,002 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,003 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,005 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,226 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,230 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,231 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,233 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,235 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,236 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,438 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,440 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,441 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,442 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,443 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2025-12-14 00:44:35,444 - EventBus - CRITICAL - Error acting on event EventType.SIGNAL in handler on_signal: '>=' not supported between instances of 'NoneType' and 'int'
+Traceback (most recent call last):
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\infrastructure\event_bus.py", line 60, in publish
+    handler(event)
+    ~~~~~~~^^^^^^^
+  File "C:\Users\ASUS\Documents\ApoloTrading\src\risk\manager.py", line 64, in on_signal
+    if state.daily_trades_count >= self.daily_max_trades:
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '>=' not supported between instances of 'NoneType' and 'int'
