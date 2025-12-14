@@ -18,8 +18,5 @@ def reset_database():
         print("❌ Failed to create admin.")
 
 if __name__ == "__main__":
-    permission = input("Type 'DELETE' to confirm wiping the database: ")
-    if permission == "DELETE":
-        reset_database()
-    else:
-        print("Aborted.")
+    # Removed interactive check for automation
+    reset_database()

@@ -8,7 +8,7 @@ def seed():
     # Get Admin User
     admin = session.query(User).filter_by(username="admin").first()
     if not admin:
-        print("❌ Admin user not found. Please run reset_db.py first.")
+        print("x Admin user not found. Please run reset_db.py first.")
         return
 
     # Clear existing data for this user
