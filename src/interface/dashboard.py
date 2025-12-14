@@ -53,66 +53,119 @@ st.markdown("Returns Consistent | Risk Controlled | Fully Automated")
 
 trades_df, account_df = load_data()
 
+# --- SIDEBAR FILTERS ---
+st.sidebar.header("Filter Data")
+if not trades_df.empty:
+    min_date = pd.to_datetime(trades_df['entry_time']).min().date()
+    max_date = pd.to_datetime(trades_df['entry_time']).max().date()
+    
+    date_range = st.sidebar.date_input(
+        "Date Range", 
+        value=(min_date, max_date),
+        min_value=min_date,
+        max_value=max_date
+    )
+    
+    all_strategies = trades_df['strategy_type'].unique()
+    selected_strategies = st.sidebar.multiselect(
+        "Strategies", 
+        all_strategies, 
+        default=all_strategies
+    )
+else:
+    st.sidebar.info("No data available for filters.")
+
+# Filter Logic
+filtered_trades = trades_df.copy()
+filtered_account = account_df.copy()
+
+if not trades_df.empty and len(date_range) == 2:
+    start_d, end_d = date_range
+    # Ensure pandas datetime comparison works
+    filtered_trades['entry_time'] = pd.to_datetime(filtered_trades['entry_time'])
+    mask = (filtered_trades['entry_time'].dt.date >= start_d) & (filtered_trades['entry_time'].dt.date <= end_d)
+    filtered_trades = filtered_trades[mask]
+    
+    if selected_strategies:
+        filtered_trades = filtered_trades[filtered_trades['strategy_type'].isin(selected_strategies)]
+
 
 if not account_df.empty:
     latest_state = account_df.iloc[-1]
     
-    # 1. KPI Row
-    col1, col2, col3, col4 = st.columns(4)
-    with col1:
-        st.metric(
-            "Equity", 
-            f"${latest_state['equity']:,.2f}", 
-            delta=None,
-            help="**Total Capital**\n\nCurrent value of the account including open positions.\n\n⚠️ **Alert**: If Equity drops below initial capital ($100k)."
-        )
-    with col2:
-        risk_color = "normal" if latest_state['risk_state'] == "NORMAL" else "off"
-        st.metric(
-            "Risk State", 
-            latest_state['risk_state'], 
-            delta_color=risk_color,
-            help="**Risk Management Mode**\n\n- **NORMAL**: Full size trading.\n- **DEFENSIVE**: Half size (DD > 4%).\n- **HALT**: Stop trading (DD > 8%)."
-        )
-    with col3:
-        st.metric(
-            "Drawdown", 
-            f"{latest_state['drawdown_pct']:.2%}", 
-            delta_color="inverse",
-            help="**Peak-to-Valley Decline**\n\nPercentage lost from the highest equity point (High Water Mark).\n\n⚠️ **Limits**: \n- > 4%: Defensive Mode\n- > 8%: Hard Stop"
-        )
-    with col4:
-        st.metric(
-            "Daily Trades", 
-            latest_state['daily_trades_count'],
-            help="**Volume Tracker**\n\nNumber of trades executed today.\n\nℹ️ **Typical**: 1-3 trades/day."
-        )
+    # --- TABS LAYOUT ---
+    tab_overview, tab_journal, tab_analytics = st.tabs(["📊 Overview", "📓 Trade Journal", "📈 Analytics"])
 
-    # 2. Charts
-    col_chart1, col_chart2 = st.columns(2)
-    
-    with col_chart1:
+    with tab_overview:
+        # 1. KPI Row
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric(
+                "Equity", 
+                f"${latest_state['equity']:,.2f}", 
+                delta=None,
+                help="**Total Capital**\n\nCurrent value of the account including open positions.\n\n⚠️ **Alert**: If Equity drops below initial capital ($100k)."
+            )
+        with col2:
+            risk_color = "normal" if latest_state['risk_state'] == "NORMAL" else "off"
+            st.metric(
+                "Risk State", 
+                latest_state['risk_state'], 
+                delta_color=risk_color,
+                help="**Risk Management Mode**\n\n- **NORMAL**: Full size trading.\n- **DEFENSIVE**: Half size (DD > 4%).\n- **HALT**: Stop trading (DD > 8%)."
+            )
+        with col3:
+            st.metric(
+                "Drawdown", 
+                f"{latest_state['drawdown_pct']:.2%}", 
+                delta_color="inverse",
+                help="**Peak-to-Valley Decline**\n\nPercentage lost from the highest equity point (High Water Mark).\n\n⚠️ **Limits**: \n- > 4%: Defensive Mode\n- > 8%: Hard Stop"
+            )
+        with col4:
+            st.metric(
+                "Daily Trades", 
+                latest_state['daily_trades_count'],
+                help="**Volume Tracker**\n\nNumber of trades executed today.\n\nℹ️ **Typical**: 1-3 trades/day."
+            )
+
+        # Equity Curve
         st.subheader("Equity Curve", help="Visualizes the growth of account capital over time.")
         if not account_df.empty:
             fig_eq = px.line(account_df, x='timestamp', y='equity', title='Account Equity Over Time')
             st.plotly_chart(fig_eq, use_container_width=True)
 
-    with col_chart2:
+    with tab_analytics:
         st.subheader("Drawdown Analysis", help="Shows the depth of losses relative to the peak. Deeper areas indicate higher risk periods.")
         if not account_df.empty:
-            # Calculate drawdown series if not fully present
-            # For now simplified
             account_df['dd_pct'] = account_df['drawdown_pct'] * 100
             fig_dd = px.area(account_df, x='timestamp', y='dd_pct', title='Drawdown %')
             fig_dd.update_yaxes(autorange="reversed")
             st.plotly_chart(fig_dd, use_container_width=True)
 
-    # 3. Trade Log
-    st.subheader("Recent Trades")
-    if not trades_df.empty:
-        st.dataframe(trades_df.tail(10))
-    else:
-        st.info("No trades recorded yet.")
+    with tab_journal:
+        st.subheader("Recent Trades Log")
+        
+        if not filtered_trades.empty:
+            # Color Coding Function
+            def color_pnl(val):
+                color = '#2ecc71' if val > 0 else '#e74c3c'
+                return f'color: {color}; font-weight: bold'
+
+            # Display Dataframe with Style
+            st.dataframe(
+                filtered_trades.style.map(color_pnl, subset=['pnl'])
+                .format({'pnl': "${:,.2f}", 'entry_credit': "${:,.2f}", 'max_risk': "${:,.2f}", 'entry_time': "{:%Y-%m-%d %H:%M}"}),
+                use_container_width=True,
+                column_config={
+                    "strategy_type": st.column_config.TextColumn("Strategy"),
+                    "symbol": st.column_config.TextColumn("Symbol"),
+                    "pnl": st.column_config.NumberColumn("PnL (Realized)"),
+                    "status": st.column_config.TextColumn("Status"),
+                },
+                hide_index=True
+            )
+        else:
+            st.info("No trades found matching the filters.")
 
 else:
     st.warning("Waiting for System Data...")
