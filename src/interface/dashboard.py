@@ -68,6 +68,18 @@ if not st.session_state.user:
 
 # --- LOGGED IN USER DASHBOARD ---
 
+# Hide Streamlit Style for Non-Admins to look like a Web App
+if st.session_state.user['role'] != "ADMIN":
+    hide_st_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+        footer {visibility: hidden;}
+        .stDeployButton {display:none;}
+        </style>
+        """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
+
 # Sidebar Profile
 with st.sidebar:
     st.write(f"👤 **{st.session_state.user['username']}** ({st.session_state.user['role']})")
