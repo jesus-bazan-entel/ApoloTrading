@@ -38,17 +38,17 @@ def login_page():
             color: #31333F !important;
         }
         
-        /* -- Input Uniformity Fix -- */
-        /* Target the container (Box) of the input to ensure Password & Text look same width */
+        /* -- Input Uniformity Fix (Aggressive) -- */
+        /* Force Input Boxes to handle padding correctly */
+        [data-testid="stTextInput"] {
+            width: 100% !important;
+        }
         .stTextInput > div > div {
             background-color: #ffffff;
             border: 1px solid #d6d6d6;
             border-radius: 5px;
-        }
-        /* Style the actual input text area inside */
-        .stTextInput > div > div > input {
-            color: #31333F;
-            background-color: transparent; /* Let parent bg shine through */
+            /* Ensure box sizing includes padding so widths match exactly */
+            box-sizing: border-box !important; 
         }
         
         /* Button focus */
@@ -57,20 +57,23 @@ def login_page():
             color: white;
             font-weight: bold;
             box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+            width: 100% !important; /* Force button full width to match inputs */
+            border-radius: 5px;
         }
-        /* Card container shadow */
+        
+        /* Card container shadow - Clean alignment */
         [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
             background-color: white;
-            padding: 2rem;
+            padding: 3rem; /* Increase padding for better breathing room */
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
         }
         </style>
         """, unsafe_allow_html=True
     )
     
-    # Centered Layout
-    col1, col2, col3 = st.columns([1, 1.2, 1])
+    # Centered Layout with more defined column ratio
+    col1, col2, col3 = st.columns([1, 1, 1])
     
     with col2:
         # Logo/Icon Area
