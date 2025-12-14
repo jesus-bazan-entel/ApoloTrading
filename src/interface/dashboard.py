@@ -26,29 +26,37 @@ if 'user' not in st.session_state:
     st.session_state.user = None
 
 def login_page():
-    # Custom CSS for Modern Dark UI with High Contrast
+    # Custom CSS for Modern Light UI
     st.markdown(
         """
         <style>
         [data-testid="stAppViewContainer"] {
-            background-color: #0e1117;
+            background-color: #f0f2f6;
         }
-        /* Make all headings and text white/light gray */
+        /* Make all headings and text dark gray for contrast */
         h1, h2, h3, p, div, label, span {
-            color: #E0E0E0 !important;
+            color: #31333F !important;
         }
         /* Input Customization */
         .stTextInput > div > div > input {
             text-align: left;
-            background-color: #262730;
-            color: #ffffff;
-            border: 1px solid #4a4a4a;
+            background-color: #ffffff;
+            color: #31333F;
+            border: 1px solid #d6d6d6;
         }
         /* Button focus */
         div.stButton > button {
             background-color: #ff4b4b;
             color: white;
             font-weight: bold;
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+        }
+        /* Card container shadow */
+        [data-testid="stVerticalBlock"] > [data-testid="stVerticalBlock"] {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         </style>
         """, unsafe_allow_html=True
@@ -59,37 +67,37 @@ def login_page():
     
     with col2:
         # Logo/Icon Area
-        st.markdown("<h1 style='text-align: center; font-size: 80px; margin-bottom: -20px; color: #E0E0E0;'>🏛️</h1>", unsafe_allow_html=True)
-        st.markdown("<h2 style='text-align: center; margin-bottom: 40px; color: #E0E0E0;'>Apolo Trading System</h2>", unsafe_allow_html=True)
+        st.markdown("<h1 style='text-align: center; font-size: 80px; margin-bottom: -20px; color: #31333F;'>🏛️</h1>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; margin-bottom: 20px; color: #31333F;'>Apolo Trading System</h2>", unsafe_allow_html=True)
         
-        with st.container(border=True):
-            st.markdown("### 🔐 Secure Access")
-            
-            username = st.text_input("Identity", placeholder="Username")
-            password = st.text_input("Key", type="password", placeholder="Password")
-            
-            st.markdown(" ") # Spacer
-            
-            if st.button("Authenticate", type="primary", use_container_width=True):
-                from src.infrastructure.auth import AuthService
-                with st.spinner("Verifying credentials..."):
-                    auth = AuthService()
-                    try:
-                        time.sleep(0.5) # UX Delay for "processing" feel
-                        user = auth.login(username, password)
-                        if user:
-                            st.session_state.user = {"id": user.id, "username": user.username, "role": user.role, "config": user.config}
-                            st.toast(f"Access Granted. Welcome {user.username}.", icon="🔓")
-                            time.sleep(1)
-                            st.rerun()
-                        else:
-                            st.error("Access Denied: Invalid Credentials")
-                    except Exception as e:
-                        st.error(f"System Error: {str(e)}")
+        # Form Container
+        st.markdown("### 🔐 Secure Access")
         
+        username = st.text_input("Identity", placeholder="Username")
+        password = st.text_input("Key", type="password", placeholder="Password")
+        
+        st.markdown(" ") # Spacer
+        
+        if st.button("Authenticate", type="primary", use_container_width=True):
+            from src.infrastructure.auth import AuthService
+            with st.spinner("Verifying credentials..."):
+                auth = AuthService()
+                try:
+                    time.sleep(0.5) 
+                    user = auth.login(username, password)
+                    if user:
+                        st.session_state.user = {"id": user.id, "username": user.username, "role": user.role, "config": user.config}
+                        st.toast(f"Access Granted. Welcome {user.username}.", icon="🔓")
+                        time.sleep(1)
+                        st.rerun()
+                    else:
+                        st.error("Access Denied: Invalid Credentials")
+                except Exception as e:
+                    st.error(f"System Error: {str(e)}")
+    
         st.markdown(
             """
-            <div style='text-align: center; font-size: 12px; color: #888888 !important; margin-top: 20px;'>
+            <div style='text-align: center; font-size: 12px; color: #666666 !important; margin-top: 20px;'>
             Restricted Access • TradeMind AI Quant Engine<br>
             © 2025 Apolo Financials
             </div>
