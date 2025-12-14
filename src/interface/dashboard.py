@@ -37,13 +37,20 @@ def login_page():
         h1, h2, h3, p, div, label, span {
             color: #31333F !important;
         }
-        /* Input Customization */
-        .stTextInput > div > div > input {
-            text-align: left;
+        
+        /* -- Input Uniformity Fix -- */
+        /* Target the container (Box) of the input to ensure Password & Text look same width */
+        .stTextInput > div > div {
             background-color: #ffffff;
-            color: #31333F;
             border: 1px solid #d6d6d6;
+            border-radius: 5px;
         }
+        /* Style the actual input text area inside */
+        .stTextInput > div > div > input {
+            color: #31333F;
+            background-color: transparent; /* Let parent bg shine through */
+        }
+        
         /* Button focus */
         div.stButton > button {
             background-color: #ff4b4b;
