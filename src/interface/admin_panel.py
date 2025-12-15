@@ -68,8 +68,16 @@ def render_strategy_panel():
             c1, c2 = st.columns(2)
             c1.slider("Max Capital Allocation (%)", 0, 100, 60)
             c1.slider("Target Win Rate", 50, 95, 75)
+            
+            # Risk Limits (PRD)
+            c1.slider("Daily Max Loss (%)", 0.5, 5.0, 2.0, 0.5)
+            c1.slider("Weekly Max Loss (%)", 1.0, 10.0, 5.0, 0.5)
+            
             c2.multiselect("Approved Assets", StrategyEngine.APPROVED_SYMBOLS, default=["SPY", "QQQ", "IWM"])
-            c2.multiselect("Active Strategies", ["BULL_PUT", "BEAR_CALL", "IRON_CONDOR"], default=["IRON_CONDOR"])
+            
+            # Get strategy names from Enum if possible, otherwise list
+            strat_list = ["BULL_PUT_SPREAD", "BEAR_CALL_SPREAD", "IRON_CONDOR", "CASH_SECURED_PUT"]
+            c2.multiselect("Active Strategies", strat_list, default=["CASH_SECURED_PUT", "BEAR_CALL_SPREAD"])
 
     st.divider()
     

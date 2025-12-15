@@ -306,33 +306,21 @@ else:
     tab_overview, tab_journal, tab_analytics = st.tabs(["📊 Overview", "📓 Trade Journal", "📈 Analytics"])
 
     with tab_overview:
-        # 1. KPI Row
-        col1, col2, col3, col4 = st.columns(4)
+        # 1. KPI Row (Extended)
+        col1, col2, col3, col4, col5, col6 = st.columns(6)
         with col1:
-            st.metric(
-                "Equity", 
-                f"${latest_state['equity']:,.2f}", 
-                delta=None,
-                help="Current value including open positions."
-            )
+            st.metric("Equity", f"${latest_state['equity']:,.2f}", help="Current Net Liquidation Value")
         with col2:
             risk_color = "normal" if latest_state['risk_state'] == "NORMAL" else "off"
-            st.metric(
-                "Risk State", 
-                latest_state['risk_state'], 
-                delta_color=risk_color
-            )
+            st.metric("Risk State", latest_state['risk_state'], delta_color=risk_color)
         with col3:
-            st.metric(
-                "Drawdown", 
-                f"{latest_state['drawdown_pct']:.2%}", 
-                delta_color="inverse"
-            )
+            st.metric("Drawdown", f"{latest_state['drawdown_pct']:.2%}", delta_color="inverse")
         with col4:
-            st.metric(
-                "Daily Trades", 
-                latest_state['daily_trades_count']
-            )
+            st.metric("Daily PnL", f"${latest_state.get('daily_pnl', 0.0):,.2f}", delta=None) # Need to fetch actual if available
+        with col5:
+             st.metric("Weekly PnL", f"${latest_state.get('weekly_pnl', 0.0):,.2f}", delta=None)
+        with col6:
+            st.metric("Consec. Loss", latest_state.get('consecutive_losses', 0))
 
         # Equity Curve
         st.subheader("Equity Curve")

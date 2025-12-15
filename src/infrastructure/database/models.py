@@ -21,6 +21,7 @@ class StrategyType(str, enum.Enum):
     BULL_PUT_SPREAD = "BULL_PUT_SPREAD"
     BEAR_CALL_SPREAD = "BEAR_CALL_SPREAD"
     IRON_CONDOR = "IRON_CONDOR"
+    CASH_SECURED_PUT = "CASH_SECURED_PUT"
 
 class User(Base):
     __tablename__ = 'users'
@@ -90,6 +91,9 @@ class AccountState(Base):
     risk_state = Column(Enum(RiskState), default=RiskState.NORMAL)
     drawdown_pct = Column(Float, default=0.0)
     daily_trades_count = Column(Integer, default=0)
+    daily_pnl = Column(Float, default=0.0)
+    weekly_pnl = Column(Float, default=0.0)
+    consecutive_losses = Column(Integer, default=0)
 
 
 # Global DB Instance

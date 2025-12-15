@@ -84,3 +84,91 @@ class IronCondorStrategy(Strategy):
             "limit_price": 3.00
         }
         self.bus.publish(Event(EventType.SIGNAL, signal))
+
+class CashSecuredPutStrategy(Strategy):
+    """
+    Cash Secured Put (CSP):
+    - Objective: Income Generation / Acquisition.
+    - Setup: Sell OTM Put.
+    - Risk: Defined (Strike Price * 100).
+    - Criteria: Delta 20-40, IV Rank > 20.
+    """
+    def __init__(self, event_bus: EventBus):
+        super().__init__("CashSecuredPut", event_bus)
+        self.bus.subscribe(EventType.MARKET_DATA, self.on_market_data)
+
+    def evaluate(self, data: dict) -> Optional[dict]:
+        current_price = data.get('price')
+        iv_rank = data.get('iv_rank', 0)
+        
+        # PRD: Prioritize high IV
+        if iv_rank < 20: 
+            return None
+            
+        # Target Delta 0.30 (approx 5% OTM for this mock)
+        strike_price = current_price * 0.95
+        
+        # Premium estimation (mock)
+        premium = current_price * 0.015
+        
+        # Collateral Requirement: Full Strike Value
+        collateral = strike_price * 100
+        
+        return {
+            "strategy": "CASH_SECURED_PUT",
+            "symbol": data.get('symbol'),
+            "side": "SELL",
+            "legs": [
+                {"side": "SELL", "type": "PUT", "strike": strike_price}
+            ],
+            "limit_price": round(premium, 2),
+            "risk_per_unit": round(collateral, 2)
+        }
+
+    def on_market_data(self, event: Event):
+        signal = self.evaluate(event.data)
+        if signal:
+            self.bus.publish(Event(EventType.SIGNAL, signal))
+
+class BearCallSpreadStrategy(Strategy):
+    """
+    Bear Call Spread (Credit Spread):
+    - Objective: Income from neutral/bearish view.
+    - Setup: Sell Call A, Buy Call B (A < B).
+    - Risk: Limited to Width - Credit.
+    """
+    def __init__(self, event_bus: EventBus):
+        super().__init__("BearCallSpread", event_bus)
+        self.bus.subscribe(EventType.MARKET_DATA, self.on_market_data)
+
+    def evaluate(self, data: dict) -> Optional[dict]:
+        current_price = data.get('price')
+        iv_rank = data.get('iv_rank', 0)
+        
+        if iv_rank < 20: return None
+        
+        # Short Call at ~30 Delta (approx 105% of price)
+        short_call_strike = current_price * 1.05
+        # Long Call protection (Spread width ~$5 or 1%)
+        long_call_strike = short_call_strike + 5.0
+        
+        credit = 1.20 # Mock
+        width = long_call_strike - short_call_strike
+        max_risk = width - credit
+        
+        return {
+            "strategy": "BEAR_CALL_SPREAD",
+            "symbol": data.get('symbol'),
+            "side": "SELL",
+            "legs": [
+                {"side": "SELL", "type": "CALL", "strike": short_call_strike},
+                {"side": "BUY",  "type": "CALL", "strike": long_call_strike}
+            ],
+            "limit_price": credit,
+            "risk_per_unit": max_risk * 100
+        }
+
+    def on_market_data(self, event: Event):
+        signal = self.evaluate(event.data)
+        if signal:
+            self.bus.publish(Event(EventType.SIGNAL, signal))
