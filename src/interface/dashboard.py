@@ -185,11 +185,27 @@ engine = create_engine(DB_URL)
 def load_data():
     try:
         # Load trades (GLOBAL)
-        trades = pd.read_sql("SELECT * FROM trades", engine)
+        trades = pd.read_sql("SELECT * FROM trades ORDER BY id DESC", engine)
+        legs = pd.read_sql("SELECT * FROM legs", engine)
+        
+        # Merge Legs data into Trades for display
+        if not trades.empty and not legs.empty:
+            # Create a description string for legs per trade
+            # Format: Side Type Strike @ Exp
+            legs['desc'] = legs.apply(
+                lambda x: f"{x['side']} {x['option_type']} {x['strike']} @ {pd.to_datetime(x['expiration']).strftime('%Y-%m-%d')}", 
+                axis=1
+            )
+            legs_grouped = legs.groupby('trade_id')['desc'].apply(lambda x: " | ".join(x)).reset_index()
+            trades = pd.merge(trades, legs_grouped, left_on='id', right_on='trade_id', how='left')
+            trades.rename(columns={'desc': 'contract_details'}, inplace=True)
+            trades['contract_details'].fillna('Legacy/Sim', inplace=True)
+        elif not trades.empty:
+             trades['contract_details'] = 'Legacy/Sim'
         
         # Load Account State (USER SPECIFIC)
         user_id = st.session_state.user['id']
-        account_query = f"SELECT * FROM account_state WHERE user_id = {user_id}"
+        account_query = f"SELECT * FROM account_state WHERE user_id = {user_id} ORDER BY timestamp DESC"
         account = pd.read_sql(account_query, engine)
         
         return trades, account
@@ -376,10 +392,12 @@ else:
                 column_config={
                     "strategy_type": st.column_config.TextColumn("Strategy"),
                     "symbol": st.column_config.TextColumn("Symbol"),
+                    "contract_details": st.column_config.TextColumn("Contracts (Legs)", width="medium"),
                     "pnl": st.column_config.NumberColumn("PnL (Realized)"),
                     "status": st.column_config.TextColumn("Status"),
                 },
-                hide_index=True
+                hide_index=True,
+                column_order=["id", "strategy_type", "symbol", "contract_details", "entry_time", "status", "entry_credit", "pnl"]
             )
         else:
             st.info("No trades found matching the filters.")

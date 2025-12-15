@@ -6,6 +6,7 @@ import src.infrastructure.auth
 from src.infrastructure.auth import AuthService
 from sqlalchemy.orm import sessionmaker
 from src.infrastructure.database.models import db, Trade, TradeStatus
+import time
 
 def render_admin_panel():
     st.title("🎛️ Admin Command Center")
@@ -60,8 +61,25 @@ def render_strategy_panel():
                 # Simulate analysis
                 proposal = engine.analyze_market()
                 trade = engine.execute_ai_trade(proposal)
-                st.success(f"Trade Executed: {trade.strategy_type.name} on {trade.symbol}")
-                st.rerun()
+                
+                # Enhanced Feedback
+                source_badge = "🟢 LIVE DATA (Yahoo)" if proposal.get("real_data") else "🟠 SIMULATION"
+                
+                st.success(f"✅ Trade Executed Successfully!")
+                
+                with st.expander("🔍 See Trade Details", expanded=True):
+                    st.markdown(f"""
+                    **Source:** {source_badge}
+                    
+                    *   **Asset:** {trade.symbol}
+                    *   **Strategy:** `{trade.strategy_type.value}`
+                    *   **Contract:** {proposal.get('strike_details', 'N/A')}
+                    *   **Premium Collected:** ${trade.entry_credit:.2f}
+                    *   **Risk (Collateral):** ${trade.max_risk:.2f}
+                    """)
+                
+                time.sleep(1) # Give time to read before rerun if needed, or remove rerun to keep msg visible
+                # st.rerun() # Commented out to let user see the message first. User can manually refresh.
                 
     with col_config:
         with st.expander("⚙️ Strategy Configuration", expanded=True):
@@ -114,23 +132,35 @@ def render_strategy_panel():
         st.info("No active positions. Run the AI Scanner to deploy capital.")
     else:
         # Table Header
-        cols = st.columns([2, 2, 2, 2, 2])
+        cols = st.columns([1, 2, 2, 1, 1, 1])
         cols[0].markdown("**Symbol**")
         cols[1].markdown("**Strategy**")
-        cols[2].markdown("**Entry Credit**")
-        cols[3].markdown("**Risk**")
-        cols[4].markdown("**Action**")
+        cols[2].markdown("**Contract (Legs)**")
+        cols[3].markdown("**Credit**")
+        cols[4].markdown("**Risk**")
+        cols[5].markdown("**Action**")
         
         for trade in active_trades:
             with st.container():
-                 c1, c2, c3, c4, c5 = st.columns([2, 2, 2, 2, 2])
+                 c1, c2, c3, c4, c5, c6 = st.columns([1, 2, 2, 1, 1, 1])
                  c1.markdown(f"**{trade.symbol}**")
                  c2.caption(trade.strategy_type.value)
-                 c3.write(f"${trade.entry_credit:.2f}")
-                 c4.write(f"${trade.max_risk:.0f}")
+                 
+                 # Format Legs
+                 legs_display = ""
+                 if trade.legs:
+                     for leg in trade.legs:
+                         exp_str = leg.expiration.strftime('%Y-%m-%d') if leg.expiration else "N/A"
+                         legs_display += f"• {leg.side} {leg.option_type} **{leg.strike:.1f}** @ {exp_str}\n"
+                 else:
+                     legs_display = "No leg data (Legacy)"
+                     
+                 c3.markdown(legs_display)
+                 c4.write(f"${trade.entry_credit:.2f}")
+                 c5.write(f"${trade.max_risk:.0f}")
                  
                  # Close Button
-                 if c5.button("Close Pos", key=f"close_{trade.id}"):
+                 if c6.button("Close", key=f"close_{trade.id}"):
                      closed_trade = engine.close_trade(trade.id)
                      color = "green" if closed_trade.pnl > 0 else "red"
                      st.toast(f"Trade Closed. PnL: ${closed_trade.pnl:.2f}")

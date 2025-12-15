@@ -99,11 +99,20 @@ class StrategyEngine:
             "strategy": strategy,
             "entry_credit": round(entry_credit, 2),
             "max_risk": round(max_risk, 2),
-            "prob_profit": random.randint(65, 85), # Calculated from Delta usually (1 - Delta)
+            "prob_profit": random.randint(65, 85),
             "dte": (datetime.strptime(expiration, "%Y-%m-%d") - datetime.now()).days,
-            "delta_proxy": 0.30, # We aimed for this
+            "delta_proxy": 0.30, 
             "real_data": True,
-            "strike_details": f"Strike {strike} @ {expiration}"
+            "strike_details": f"Strike {strike} @ {expiration}",
+            "legs_data": [{
+                "symbol": symbol,
+                "option_symbol": f"{symbol}_{expiration}_{strike}_{'C' if is_call else 'P'}",
+                "side": "SELL",
+                "strike": strike,
+                "expiration": datetime.strptime(expiration, "%Y-%m-%d"),
+                "option_type": "CALL" if is_call else "PUT",
+                "entry_price": price
+            }]
         }
 
     def _analyze_market_simulation(self, symbol, strategy):
@@ -112,13 +121,20 @@ class StrategyEngine:
         base_price = random.uniform(100, 500)
         dte = random.randint(30, 45)
         
+        # Mock Expiration
+        mock_exp = datetime.now() + timedelta(days=dte)
+        
         if strategy == StrategyType.CASH_SECURED_PUT:
              max_risk = base_price * 100 
              entry_credit = base_price * random.uniform(0.01, 0.03)
+             strike = base_price * 0.95
+             is_call = False
         else:
              width = 5.0 
              max_risk = (width * 100) * 0.8 
              entry_credit = width * 100 * 0.2 
+             strike = base_price * 1.05
+             is_call = True
         
         return {
             "symbol": symbol,
@@ -127,13 +143,26 @@ class StrategyEngine:
             "max_risk": round(max_risk, 2),
             "prob_profit": random.randint(65, 85),
             "dte": dte,
-            "delta_proxy": random.uniform(0.20, 0.40)
+            "delta_proxy": random.uniform(0.20, 0.40),
+            "strike_details": f"Sim {strike:.2f}",
+            "legs_data": [{
+                "symbol": symbol,
+                "option_symbol": f"SIM_{symbol}_{strike:.0f}",
+                "side": "SELL",
+                "strike": strike,
+                "expiration": mock_exp,
+                "option_type": "CALL" if is_call else "PUT",
+                "entry_price": entry_credit / 100
+            }]
         }
 
     def execute_ai_trade(self, trade_proposal):
         """
         Commits the trade to the database (Global Execution).
+        Now saves LEGS.
         """
+        from src.infrastructure.database.models import Leg # Import locally to avoid circulars
+        
         new_trade = Trade(
             strategy_type=trade_proposal["strategy"],
             symbol=trade_proposal["symbol"],
@@ -147,6 +176,23 @@ class StrategyEngine:
         )
         
         self.session.add(new_trade)
+        self.session.flush() # ID generation
+        
+        # Save Legs
+        if "legs_data" in trade_proposal:
+            for leg_data in trade_proposal["legs_data"]:
+                new_leg = Leg(
+                    trade_id=new_trade.id,
+                    option_symbol=leg_data.get("option_symbol"),
+                    side=leg_data.get("side"),
+                    strike=leg_data.get("strike"),
+                    expiration=leg_data.get("expiration"),
+                    option_type=leg_data.get("option_type"),
+                    entry_price=leg_data.get("entry_price"),
+                    exit_price=0.0
+                )
+                self.session.add(new_leg)
+        
         self.session.commit()
         return new_trade
 
