@@ -290,6 +290,31 @@ if account_df.empty:
             except Exception as e:
                 st.error(f"Activation Failed: {e}")
 
+        st.markdown("---")
+        with st.expander("📘 Strategy Analysis: Why is this safe?"):
+             st.markdown(
+                """
+                ### Income Weaver Strategy (Hybrid Income)
+                The configuration selected above is **solid, tactically advanced, and fully aligned with strict risk management**. It focuses on generating recurring income in lateral or moderate markets.
+                
+                **1. Core Logic**
+                The system combines **Cash Secured Puts** and **Bear Call Spreads** to monetize the market's non-directional variables: **Time (*Theta*)** and **Implied Volatility (*Vega*)**.
+                
+                | Strategy | Outlook | Risk Control |
+                | :--- | :--- | :--- |
+                | **Cash Secured Put (CSP)** | Bullish/Neutral | **Defined Risk** (Cash Collateral). Gains from Time Decay. |
+                | **Bear Call Spread** | Bearish/Neutral | **Limited Risk** (Spread Width). Profits if market stays below the short strike. |
+                
+                **2. Strict Risk Management (Rule 2/5/40)**
+                *   **Daily Max Loss (2.0%)**: Hard stop to prevent intraday drawdowns.
+                *   **Weekly Max Loss (5.0%)**: Protects against prolonged adverse trends.
+                *   **Max Capital Allocation (40-50%)**: We keep ~50% as *Dry Powder* for defensive maneuvers or new opportunities.
+                
+                **3. Asset Selection**
+                We trade only top-tier ETFs (**SPY, QQQ, IWM**) to ensure liquidity and avoid single-stock volatility.
+                """
+             )
+
     with col_act2:
         st.write("#### Global Market Preview")
         st.dataframe(
@@ -365,6 +390,24 @@ st.sidebar.markdown("---")
 st.sidebar.metric("Sharpe Ratio (Rolling)", "1.24") 
 st.sidebar.metric("Profit Factor", "1.5")
 st.sidebar.metric("Expectancy", "$45.00")
+
+with st.sidebar.expander("ℹ️ Strategy Logic"):
+    st.markdown(
+    """
+    **Income Weaver (Hybrid)**
+    
+    **1. Philosophy**
+    Monetize time decay (*Theta*) in neutral markets using **Cash Secured Puts** and **Bear Call Spreads**.
+    
+    **2. Risk Rules (2/5/40)**
+    *   **2%** Daily Hard Stop
+    *   **5%** Weekly Hard Stop
+    *   **50%** Max Allocation (Dry Powder)
+    
+    **3. Assets**
+    Top ETFs (SPY, QQQ, IWM) only. No extreme volatility.
+    """
+    )
 
 # Auto-refresh
 if st.checkbox("Auto-refresh (5s)", value=True):

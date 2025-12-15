@@ -78,6 +78,32 @@ def render_strategy_panel():
             # Get strategy names from Enum if possible, otherwise list
             strat_list = ["BULL_PUT_SPREAD", "BEAR_CALL_SPREAD", "IRON_CONDOR", "CASH_SECURED_PUT"]
             c2.multiselect("Active Strategies", strat_list, default=["CASH_SECURED_PUT", "BEAR_CALL_SPREAD"])
+            
+        with st.expander("ℹ️ Strategy Analysis & Logic"):
+            st.markdown(
+                """
+                ### Income Weaver Strategy (Hybrid Income)
+                The configuration selected above is **solid, tactically advanced, and fully aligned with strict risk management**. It focuses on generating recurring income in lateral or moderate markets.
+                
+                #### 1. Core Logic
+                | Strategy | Outlook | Risk Control |
+                | :--- | :--- | :--- |
+                | **Cash Secured Put (CSP)** | Bullish/Neutral | **Defined Risk** (Cash Collateral). Gains from Time Decay (*Theta*). |
+                | **Bear Call Spread** | Bearish/Neutral | **Limited Risk** (Spread Width). Profits if market stays below the short strike. |
+                
+                **Synthesis (Synthetic Short Iron Condor):**
+                Combining these creates a neutral range strategy that collects premium from both sides of the market, profiting primarily from **Time Decay (Theta)** and **Volatility Crush (Vega)**.
+                
+                #### 2. Risk Management (Rule 2/5/40)
+                *   **Daily Max Loss (2.0%)**: Acts as a circuit breaker to stop trading during intraday crashes.
+                *   **Weekly Max Loss (5.0%)**: Protects capital against prolonged adverse trends.
+                *   **Max Capital Allocation (40-50%)**: Keeps half the portfolio as *Dry Powder* for adjustments or opportunities.
+                
+                #### 3. Asset Selection
+                *   **ETFs (SPY, QQQ, IWM)**: Provide diversification and reduce single-stock gap risk.
+                *   **Avoid Extreme Volatility**: The AI automatically excludes earnings weeks and highly volatile stocks to protect the premium selling thesis.
+                """
+            )
 
     st.divider()
     

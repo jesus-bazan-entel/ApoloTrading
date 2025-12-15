@@ -12,7 +12,7 @@ class StrategyEngine:
     """
     
     APPROVED_SYMBOLS = ["SPY", "QQQ", "IWM", "MSFT", "AAPL", "NVDA", "AMD", "TSLA"]
-    STRATEGIES = [StrategyType.BULL_PUT_SPREAD, StrategyType.BEAR_CALL_SPREAD, StrategyType.CASH_SECURED_PUT, StrategyType.IRON_CONDOR]
+    STRATEGIES = [StrategyType.CASH_SECURED_PUT, StrategyType.BEAR_CALL_SPREAD, StrategyType.BULL_PUT_SPREAD, StrategyType.IRON_CONDOR]
     
     def __init__(self, session: Session):
         self.session = session
