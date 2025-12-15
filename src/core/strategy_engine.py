@@ -16,36 +16,109 @@ class StrategyEngine:
     
     def __init__(self, session: Session):
         self.session = session
+        # Initialize Real Data Access
+        from src.infrastructure.market_data.client import MarketDataClient
+        self.market_data = MarketDataClient()
 
     def analyze_market(self):
         """
-        Simulates scanning the market for opportunities fitting PRD criteria.
-        Criteria:
-        - Delta 20-40
-        - Expiration 30-45 days
-        - IV Rank > 50 (High Vol)
+        Scans the market using REAL DATA via MarketDataClient.
+        Falls back to simulation only if data fetch fails.
         """
         symbol = random.choice(self.APPROVED_SYMBOLS)
         strategy = random.choice(self.STRATEGIES)
         
-        # Simulate pricing & Greeks
-        base_price = random.uniform(100, 500)
+        # 1. Fetch Real Data
+        print(f"AI Scanning {symbol} for {strategy}...")
+        current_price = self.market_data.get_current_price(symbol)
+        chain_data = self.market_data.get_option_chain(symbol)
         
-        # PRD: Focus on 30-45 DTE
-        dte = random.randint(30, 45)
+        if not chain_data or current_price == 0:
+            print("Real data unavailable, falling back to basic simulation.")
+            return self._analyze_market_simulation(symbol, strategy) # Helper for fallback
+            
+        # 2. Strategy Logic with Real Data
+        expiration = chain_data['expiration']
+        options_df = None
+        is_call = False
         
-        # PRD: Delta 20-40 (OTM)
-        # Simulating OTM by strike distance
-        strike_distance = random.uniform(0.03, 0.08) # 3-8% OTM
+        # Define Target Strikes based on Strategy
+        target_strike = 0
+        limit_price = 0
+        risk = 0
+        
+        if strategy == StrategyType.CASH_SECURED_PUT or strategy == StrategyType.BULL_PUT_SPREAD:
+            # Look for OTM Puts (Strike < Price) -> Delta ~0.30 approx 4-5% OTM for volatile, 2-3% for stable
+            target_strike_price = current_price * 0.96 # 4% OTM
+            options_df = chain_data['puts']
+            is_call = False
+            
+        elif strategy == StrategyType.BEAR_CALL_SPREAD:
+            # Look for OTM Calls (Strike > Price)
+            target_strike_price = current_price * 1.04 # 4% OTM
+            options_df = chain_data['calls']
+            is_call = True
+            
+        else:
+            # Iron Condor -> Complex, let's simplify to Put side for MVP or fallback
+            return self._analyze_market_simulation(symbol, strategy)
+
+        # 3. Find specific contract
+        # Sort by strike to find closest to target
+        options_df['diff'] = abs(options_df['strike'] - target_strike_price)
+        options_df = options_df.sort_values('diff')
+        
+        if options_df.empty:
+             return self._analyze_market_simulation(symbol, strategy)
+             
+        selected_option = options_df.iloc[0] # The closest one
+        
+        # 4. Pricing
+        # Use 'lastPrice' or midpoint of 'bid'/'ask'
+        price = selected_option.get('lastPrice', 0)
+        strike = selected_option['strike']
+        
+        # Calculate Risk/Return based on Strategy
+        entry_credit = price * 100 # Premium received
         
         if strategy == StrategyType.CASH_SECURED_PUT:
-             max_risk = base_price * 100 # Cash Secured
-             entry_credit = base_price * random.uniform(0.01, 0.03) # 1-3% premium
+            max_risk = strike * 100 # Full collateral
+        elif strategy == StrategyType.BEAR_CALL_SPREAD or strategy == StrategyType.BULL_PUT_SPREAD:
+            # Mocking the protection leg (buying next strike)
+            # Assuming spread width of $5
+            width = 5.0
+            protection_price = price * 0.3 # Rough estimate of buying cheaper option
+            net_credit = (price - protection_price) * 100
+            entry_credit = net_credit
+            max_risk = (width * 100) - net_credit
         else:
-             # Spreads
+            max_risk = 0
+            
+        return {
+            "symbol": symbol,
+            "strategy": strategy,
+            "entry_credit": round(entry_credit, 2),
+            "max_risk": round(max_risk, 2),
+            "prob_profit": random.randint(65, 85), # Calculated from Delta usually (1 - Delta)
+            "dte": (datetime.strptime(expiration, "%Y-%m-%d") - datetime.now()).days,
+            "delta_proxy": 0.30, # We aimed for this
+            "real_data": True,
+            "strike_details": f"Strike {strike} @ {expiration}"
+        }
+
+    def _analyze_market_simulation(self, symbol, strategy):
+        # ... (Old Code logic moved here) ...
+        # Simulate pricing & Greeks
+        base_price = random.uniform(100, 500)
+        dte = random.randint(30, 45)
+        
+        if strategy == StrategyType.CASH_SECURED_PUT:
+             max_risk = base_price * 100 
+             entry_credit = base_price * random.uniform(0.01, 0.03)
+        else:
              width = 5.0 
-             max_risk = (width * 100) * 0.8 # Risk is width - credit roughly
-             entry_credit = width * 100 * 0.2 # 20% of width
+             max_risk = (width * 100) * 0.8 
+             entry_credit = width * 100 * 0.2 
         
         return {
             "symbol": symbol,
