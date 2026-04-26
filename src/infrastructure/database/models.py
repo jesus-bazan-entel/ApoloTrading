@@ -22,6 +22,8 @@ class StrategyType(str, enum.Enum):
     BEAR_CALL_SPREAD = "BEAR_CALL_SPREAD"
     IRON_CONDOR = "IRON_CONDOR"
     CASH_SECURED_PUT = "CASH_SECURED_PUT"
+    LONG_CALL = "LONG_CALL"
+    LONG_PUT = "LONG_PUT"
 
 class User(Base):
     __tablename__ = 'users'

@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from typing import Optional
 from sqlalchemy.orm import Session
+from src.config import config
 from src.infrastructure.event_bus import EventBus, Event, EventType
 from src.infrastructure.database.models import Trade, AccountState, RiskState, TradeStatus
 
@@ -14,15 +15,15 @@ class RiskManager:
     def __init__(self, event_bus: EventBus, db_session: Session):
         self.bus = event_bus
         self.db = db_session
-        
+
         # Risk Limits (hardcoded defaults, should be from User Config)
         self.max_drawdown_limit = 0.08 # 8% Hard Stop
         self.daily_max_loss_pct = 0.02 # 2% Daily Max Loss
         self.weekly_max_loss_pct = 0.05 # 5% Weekly Max Loss
         self.max_consecutive_losses = 3
-        
+
         self.daily_max_trades = 3
-        
+
         # Subscribe to signals
         self.bus.subscribe(EventType.SIGNAL, self.on_signal)
 
@@ -30,11 +31,11 @@ class RiskManager:
         # Get latest state from DB
         state = self.db.query(AccountState).order_by(AccountState.timestamp.desc()).first()
         if not state:
-            # Initial State
+            # Initial State based on configured starting capital
             return AccountState(
-                equity=100000.0, 
-                balance=100000.0, 
-                risk_state=RiskState.NORMAL, 
+                equity=config.INITIAL_EQUITY,
+                balance=config.INITIAL_EQUITY,
+                risk_state=RiskState.NORMAL,
                 drawdown_pct=0.0,
                 daily_pnl=0.0,
                 weekly_pnl=0.0,
@@ -45,22 +46,32 @@ class RiskManager:
     def _calculate_position_size(self, signal_data: dict, state: AccountState) -> float:
         """
         Dynamic Position Sizing:
-        NORMAL: 2% Risk
-        DEFENSIVE: 1% Risk
-        HALT: 0%
+        NORMAL: RISK_PCT_NORMAL of equity at risk per trade
+        DEFENSIVE: RISK_PCT_DEFENSIVE of equity at risk per trade
+        HALT: 0
+        For small accounts, allow 1 contract when a single contract's risk is
+        within SINGLE_TRADE_HARD_CAP_PCT of equity (otherwise sub-2k accounts
+        could never open a position because int(80/150) == 0).
         """
         if state.risk_state == RiskState.HALT:
             return 0.0
-        
-        risk_pct = 0.02 if state.risk_state == RiskState.NORMAL else 0.01
+
+        risk_pct = (config.RISK_PCT_NORMAL
+                    if state.risk_state == RiskState.NORMAL
+                    else config.RISK_PCT_DEFENSIVE)
         capital_at_risk = state.equity * risk_pct
-        
-        # Estimation: For Credit Spreads, Max Risk = width - credit
-        risk_per_contract = signal_data.get('risk_per_unit', 100.0) 
-        
-        if risk_per_contract <= 0: return 0.0
-        
+
+        risk_per_contract = signal_data.get('risk_per_unit', 100.0)
+        if risk_per_contract <= 0:
+            return 0.0
+
         quantity = int(capital_at_risk / risk_per_contract)
+
+        if quantity == 0:
+            hard_cap = state.equity * config.SINGLE_TRADE_HARD_CAP_PCT
+            if risk_per_contract <= hard_cap:
+                quantity = 1
+
         return quantity
 
     def on_signal(self, event: Event):
@@ -119,10 +130,11 @@ class RiskManager:
         Now requires pnl_change to update daily/weekly PnL.
         """
         latest = self._get_current_risk_state()
-        
-        # Calculate Drawdown
-        hwm = 100000.0 # Placeholder
-        dd = (hwm - current_equity) / hwm
+
+        # Calculate Drawdown against configured starting equity (placeholder
+        # for proper HWM tracking).
+        hwm = config.INITIAL_EQUITY
+        dd = (hwm - current_equity) / hwm if current_equity < hwm else 0.0
         
         new_state = RiskState.NORMAL
         if dd > 0.04: new_state = RiskState.DEFENSIVE

@@ -32,16 +32,19 @@ class ExecutionEngine:
         # Simulate Order Placement
         order_id = str(uuid.uuid4())
         logger.info(f"PAPER TRADING: Placing order {order_id} for {order_req['symbol']}")
-        
+
         # Simulate Immediate Fill for now (In real paper trading, we'd wait for price match)
         fill_event = Event(EventType.ORDER_FILL, {
             "order_id": order_id,
             "signal_id": order_req.get('signal_id'),
             "symbol": order_req['symbol'],
+            "strategy": order_req.get('strategy'),
+            "side": order_req.get('side'),
+            "legs": order_req.get('legs'),
             "filled_quantity": order_req['quantity'],
             "fill_price": order_req['price'], # Filled at limit
             "commission": 1.05 * order_req['quantity'], # Mock commission
-            "timestamp": event.timestamp if 'event' in locals() else None
+            "timestamp": None,
         })
         self.bus.publish(fill_event)
 

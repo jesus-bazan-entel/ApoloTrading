@@ -1,7 +1,11 @@
+import random
 from datetime import datetime
 from sqlalchemy.orm import Session
+from src.config import config
 from src.infrastructure.event_bus import EventBus, Event, EventType
-from src.infrastructure.database.models import Trade, Leg, AccountState, TradeStatus, RiskState
+from src.infrastructure.database.models import (
+    Trade, Leg, AccountState, TradeStatus, RiskState, StrategyType,
+)
 
 class PortfolioManager:
     """
@@ -14,61 +18,78 @@ class PortfolioManager:
         self.db = db_session
         self.bus.subscribe(EventType.ORDER_FILL, self.on_fill)
 
+    @staticmethod
+    def _resolve_strategy(strategy_str) -> StrategyType:
+        if isinstance(strategy_str, StrategyType):
+            return strategy_str
+        try:
+            return StrategyType(strategy_str)
+        except (ValueError, TypeError):
+            return StrategyType.LONG_CALL
+
     def on_fill(self, event: Event):
         data = event.data
-        print(f"PORTFOLIO: Processing Fill for {data['symbol']}")
-        
-        # 1. Create Trade Record
-        # Simplified: Assuming 1 order = 1 trade for MVP. 
-        # In reality, multiple fills make one trade.
-        
-        # Determine strategy type (passed from signal usually, simplified here)
-        strategy_map = {
-            "SPY": "BULL_PUT_SPREAD", # Mock inference
-            "QQQ": "IRON_CONDOR",
-            "IWM": "BEAR_CALL_SPREAD"
-        }
-        
+        side = (data.get('side') or 'BUY').upper()
+        is_debit = side == 'BUY'
+        qty = data.get('filled_quantity') or data.get('quantity') or 1
+        fill_price = data.get('fill_price', 0.0)
+        commission = data.get('commission', 0.0)
+
+        strategy_enum = self._resolve_strategy(data.get('strategy'))
+
+        print(f"PORTFOLIO: Fill {side} {qty}x {data['symbol']} @ {fill_price} "
+              f"({strategy_enum.value})")
+
+        # 1. Trade record. For long options, max_risk = premium paid * 100 * qty.
+        if is_debit:
+            max_risk = fill_price * 100 * qty
+        else:
+            max_risk = qty * 100  # placeholder for credit strategies
+
         new_trade = Trade(
-            strategy_type=strategy_map.get(data['symbol'], "BULL_PUT_SPREAD"),
+            strategy_type=strategy_enum,
             symbol=data['symbol'],
-            entry_time=data['timestamp'] or datetime.utcnow(),
+            entry_time=data.get('timestamp') or datetime.utcnow(),
             status=TradeStatus.OPEN,
-            entry_credit=data['fill_price'], # Assuming credit receive
-            max_risk=data['quantity'] * 100, # Placeholder risk calc
-            commission=data.get('commission', 0.0)
+            entry_credit=fill_price,
+            max_risk=max_risk,
+            commission=commission,
         )
         self.db.add(new_trade)
-        self.db.commit() # Commit to get ID
-        
-        # 2. Update Account State
-        # Get last state
-        last_state = self.db.query(AccountState).order_by(AccountState.timestamp.desc()).first()
-        current_equity = last_state.equity if last_state else 100000.0
-        
-        # Mock PnL impact (since it's a credit, cash goes up, but equity stays same until price moves)
-        # For visualization, let's simulate a small immediate random PnL fluctuation
-        import random
-        pnl_change = random.uniform(-50, 150) 
-        
+        self.db.commit()
+
+        # 2. Update Account State.
+        last_state = (self.db.query(AccountState)
+                      .order_by(AccountState.timestamp.desc()).first())
+        current_equity = last_state.equity if last_state else config.INITIAL_EQUITY
+
+        # Simulated mark-to-market move on entry (placeholder until real
+        # closing prices are wired in). For debit trades, we bias the random
+        # range a bit positively when the directional bet is right and
+        # negatively when it isn't; we don't know that here, so keep it
+        # symmetric scaled to the position's notional risk.
+        notional = max(max_risk, 1.0)
+        pnl_change = random.uniform(-0.3, 0.5) * notional
+
         new_equity = current_equity + pnl_change
-        
-        # Drawdown Calc
-        # (Simplified, need HWM tracking in DB or memory)
-        hwm = 100000.0 # simplified
+
+        hwm = max(config.INITIAL_EQUITY, current_equity)
         dd = (hwm - new_equity) / hwm if new_equity < hwm else 0.0
-        
+
         risk_state = RiskState.NORMAL
-        if dd > 0.04: risk_state = RiskState.DEFENSIVE
-        if dd > 0.08: risk_state = RiskState.HALT
+        if dd > 0.04:
+            risk_state = RiskState.DEFENSIVE
+        if dd > 0.08:
+            risk_state = RiskState.HALT
 
         new_state = AccountState(
             timestamp=datetime.utcnow(),
             equity=new_equity,
-            balance=new_equity, # Simplified
+            balance=new_equity,
             risk_state=risk_state,
             drawdown_pct=dd,
-            daily_trades_count=(last_state.daily_trades_count + 1) if last_state else 1
+            daily_trades_count=((last_state.daily_trades_count or 0) + 1)
+                                if last_state else 1,
         )
         self.db.add(new_state)
         self.db.commit()
