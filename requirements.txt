@@ -5,3 +5,7 @@ streamlit
 pandas
 plotly
 bcrypt
+yfinance
+scipy
+matplotlib
+mplfinance

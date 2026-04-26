@@ -78,6 +78,9 @@ class PortfolioManager:
 
         max_risk = (fill_price * 100 * qty) if is_debit else (qty * 100)
 
+        pattern_name = data.get("pattern_name")
+        rationale = data.get("rationale")
+
         trade = Trade(
             strategy_type=strategy_enum,
             symbol=symbol,
@@ -86,11 +89,14 @@ class PortfolioManager:
             entry_credit=fill_price,
             max_risk=max_risk,
             commission=commission,
+            entry_pattern=pattern_name,
+            entry_rationale=rationale,
         )
         self.db.add(trade)
         self.db.flush()  # need trade.id for legs and the fill annotation
 
-        for leg in data.get("legs") or []:
+        legs = data.get("legs") or []
+        for leg in legs:
             self.db.add(Leg(
                 trade_id=trade.id,
                 option_symbol=self._compose_option_symbol(symbol, leg),
@@ -101,6 +107,30 @@ class PortfolioManager:
                 entry_price=fill_price,
                 exit_price=None,
             ))
+
+        # Generate the didactic candlestick chart for this trade. We try, but
+        # never let chart errors block trade persistence.
+        if pattern_name and data.get("ohlc_history") and legs:
+            try:
+                from src.visualization.trade_chart import generate_trade_chart
+                first_leg = legs[0]
+                path = generate_trade_chart(
+                    trade_id=trade.id,
+                    symbol=symbol,
+                    strategy=strategy_enum.value,
+                    pattern_name=pattern_name,
+                    pattern_bars_back=int(data.get("pattern_bars_back") or 1),
+                    rationale=rationale or "",
+                    ohlc_history=data["ohlc_history"],
+                    entry_spot=float(data.get("spot_at_entry") or 0.0),
+                    strike=float(first_leg.get("strike", 0.0)),
+                    expiration=first_leg.get("expiration"),
+                )
+                if path:
+                    trade.chart_path = path
+            except Exception as e:
+                print(f"PORTFOLIO: chart generation failed for trade {trade.id}: {e}")
+
         self.db.commit()
 
         # Annotate the in-flight event so ExitManager and downstream listeners
@@ -110,8 +140,10 @@ class PortfolioManager:
         cash_delta = (-(fill_price * 100 * qty) if is_debit
                       else (fill_price * 100 * qty)) - commission
 
+        pattern_tag = f" [{pattern_name}]" if pattern_name else ""
         print(f"PORTFOLIO: OPEN {side} {qty}x {symbol} "
-              f"@ {fill_price} ({strategy_enum.value}) trade_id={trade.id}")
+              f"@ {fill_price} ({strategy_enum.value}){pattern_tag} "
+              f"trade_id={trade.id}")
 
         self._append_account_state(cash_delta=cash_delta, opened_trade=True)
 

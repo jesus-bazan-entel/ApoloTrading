@@ -111,18 +111,26 @@ class RiskManager:
             print(f"RISK REJECT: Calculated quantity is 0 (Risk State: {state.risk_state})")
             return
 
-        # 7. Publish Order Request
+        # 7. Publish Order Request. Carry the candlestick rationale through
+        # so the portfolio layer can persist it on the Trade record.
         order_event = Event(EventType.ORDER_REQUEST, {
             "signal_id": signal.get('id'),
             "symbol": signal.get('symbol'),
             "strategy": signal.get('strategy'),
             "side": signal.get('side'),
             "quantity": quantity,
-            "order_type": "LIMIT", # Options limit orders
+            "order_type": "LIMIT",
             "price": signal.get('limit_price'),
-            "legs": signal.get('legs') # Pass complex legs info
+            "legs": signal.get('legs'),
+            "pattern_name": signal.get('pattern_name'),
+            "pattern_strength": signal.get('pattern_strength'),
+            "pattern_bars_back": signal.get('pattern_bars_back'),
+            "rationale": signal.get('rationale'),
+            "ohlc_history": signal.get('ohlc_history'),
+            "spot_at_entry": signal.get('spot_at_entry'),
         })
-        print(f"RISK APPROVED: {quantity} cons for {signal.get('symbol')}")
+        print(f"RISK APPROVED: {quantity} cons for {signal.get('symbol')} "
+              f"({signal.get('pattern_name')})")
         self.bus.publish(order_event)
 
     def update_account_state(self, current_equity: float, pnl_change: float = 0.0):

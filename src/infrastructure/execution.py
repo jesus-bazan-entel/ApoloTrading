@@ -56,5 +56,13 @@ class ExecutionEngine:
             "commission": result.commission,
             "closing_trade_id": order.closing_trade_id,
             "exit_reason": order.exit_reason,
+            # Forward the candlestick rationale so PortfolioManager can
+            # persist it and the chart generator can render the entry.
+            "pattern_name": order_req.get("pattern_name"),
+            "pattern_strength": order_req.get("pattern_strength"),
+            "pattern_bars_back": order_req.get("pattern_bars_back"),
+            "rationale": order_req.get("rationale"),
+            "ohlc_history": order_req.get("ohlc_history"),
+            "spot_at_entry": order_req.get("spot_at_entry"),
             "timestamp": None,
         }))

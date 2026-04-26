@@ -117,7 +117,7 @@ class BacktestEngine:
         # MultiIndex columns for multi-ticker downloads.
         if isinstance(df.columns, pd.MultiIndex):
             df = df.xs(self.symbol, axis=1, level=1)
-        df = df[["Close"]].dropna()
+        df = df[["Open", "High", "Low", "Close"]].dropna()
         df["ret"] = df["Close"].pct_change()
         df["vol_20"] = df["ret"].rolling(20).std() * math.sqrt(252)
         # 252-day rolling IV-rank proxy
@@ -136,17 +136,32 @@ class BacktestEngine:
                     f"bars={len(df)}")
 
         equity_curve = []
+        ohlc_history = []  # rolling OHLC bars passed to strategies for pattern detection
         for ts, row in df.iterrows():
             spot = float(row["Close"])
             sigma = float(row["vol_20"])
             ivr = float(row["iv_rank"]) if not math.isnan(row["iv_rank"]) else 50.0
             self.bt_client.update(self.symbol, ts.to_pydatetime(), spot, sigma)
 
+            ohlc_history.append({
+                "timestamp": ts.to_pydatetime(),
+                "open": float(row["Open"]),
+                "high": float(row["High"]),
+                "low": float(row["Low"]),
+                "close": spot,
+            })
+            ohlc_history = ohlc_history[-30:]  # keep last 30 bars context
+
             payload = {
                 "symbol": self.symbol,
                 "price": spot,
                 "iv_rank": ivr,
                 "timestamp": ts.to_pydatetime(),
+                "open": float(row["Open"]),
+                "high": float(row["High"]),
+                "low": float(row["Low"]),
+                "close": spot,
+                "ohlc_history": list(ohlc_history),
             }
             # ExitManager reacts to MARKET_DATA first so any close on this
             # bar is realized before strategies evaluate new entries.

@@ -1,7 +1,9 @@
-from collections import defaultdict, deque
+from collections import defaultdict
 from datetime import datetime
-from typing import Deque, Dict, List, Optional
-from src.infrastructure.event_bus import EventBus, Event, EventType
+from typing import Dict, List, Optional
+
+from src.infrastructure.event_bus import Event, EventBus, EventType
+from src.strategies.candlestick import Bar, Pattern, detect_first
 
 class Strategy:
     def __init__(self, name: str, event_bus: EventBus):
@@ -133,44 +135,54 @@ class CashSecuredPutStrategy(Strategy):
 
 
 class _DirectionalDebitStrategy(Strategy):
-    """Shared mechanics for Long Call / Long Put: track price history per
-    symbol and emit a directional signal when momentum confirms the bias and
-    implied volatility is not too rich (cheaper premium = better risk/reward
-    on a long single-leg)."""
+    """Shared mechanics for Long Call / Long Put.
+
+    Each entry is justified by a confirmed candlestick pattern in the
+    direction of the strategy's bias (bullish patterns for calls, bearish
+    for puts). We pull the OHLC history from the DAILY_BAR payload, run
+    it through the candlestick detectors, and only emit a signal when a
+    pattern fires AND IV rank is moderate.
+
+    The signal carries the pattern name, a didactic description, and the
+    bar window so the chart generator can later annotate the trade.
+    """
 
     OPTION_TYPE: str = "CALL"   # overridden by subclasses
-    BIAS_DIRECTION: int = 1     # +1 bullish (call), -1 bearish (put)
+    BIAS: str = "BULLISH"       # "BULLISH" or "BEARISH"
     OTM_PCT: float = 0.02       # how far OTM (heuristic fallback)
     PREMIUM_PCT: float = 0.012  # rough premium estimate as % of spot (fallback)
     MAX_IV_RANK: float = 50.0   # skip when IV is too rich
     TARGET_DELTA: float = 0.35  # ~30-40 delta for long options
     MIN_DTE: int = 30
     MAX_DTE: int = 45
+    MIN_PATTERN_STRENGTH: int = 2
 
-    HISTORY_LEN: int = 10
-    FAST_MA: int = 3
-    SLOW_MA: int = 8
-    COOLDOWN_TICKS: int = 5     # avoid stacking signals on every tick
+    COOLDOWN_BARS: int = 3      # avoid stacking signals on consecutive bars
 
     def __init__(self, name: str, event_bus: EventBus,
                  market_data_client=None):
         super().__init__(name, event_bus)
-        self._history: Dict[str, Deque[float]] = defaultdict(
-            lambda: deque(maxlen=self.HISTORY_LEN)
-        )
         self._cooldown: Dict[str, int] = defaultdict(int)
         self.market_data = market_data_client  # optional: real chain lookups
         # Long Call/Put are multi-day theses. Only consider entries on the
         # daily bar; intraday MARKET_DATA ticks are handled by ExitManager.
         self.bus.subscribe(EventType.DAILY_BAR, self.on_market_data)
 
-    def _momentum_confirms(self, prices: Deque[float]) -> bool:
-        if len(prices) < self.SLOW_MA:
-            return False
-        fast = sum(list(prices)[-self.FAST_MA:]) / self.FAST_MA
-        slow = sum(list(prices)[-self.SLOW_MA:]) / self.SLOW_MA
-        # Bullish: fast > slow. Bearish: fast < slow.
-        return (fast - slow) * self.BIAS_DIRECTION > 0
+    @staticmethod
+    def _bars_from_history(history: List[dict]) -> List[Bar]:
+        return [Bar(open=h["open"], high=h["high"],
+                    low=h["low"], close=h["close"]) for h in history]
+
+    def _detect_pattern(self, history: List[dict]) -> Optional[Pattern]:
+        bars = self._bars_from_history(history)
+        if len(bars) < 6:
+            return None
+        pattern = detect_first(bars, self.BIAS)
+        if pattern is None:
+            return None
+        if pattern.strength < self.MIN_PATTERN_STRENGTH:
+            return None
+        return pattern
 
     def _build_signal_from_chain(self, symbol: str) -> Optional[dict]:
         """Try to pick a real contract by delta. None if data not available."""
@@ -198,7 +210,8 @@ class _DirectionalDebitStrategy(Strategy):
 
     def _build_signal_heuristic(self, symbol: str, price: float) -> dict:
         """Fallback when the option chain is unavailable (offline/sim)."""
-        strike = price * (1 + self.OTM_PCT * self.BIAS_DIRECTION)
+        bias_sign = 1 if self.BIAS == "BULLISH" else -1
+        strike = price * (1 + self.OTM_PCT * bias_sign)
         premium = round(price * self.PREMIUM_PCT, 2)
         return {
             "strike": round(strike, 2),
@@ -213,11 +226,9 @@ class _DirectionalDebitStrategy(Strategy):
     def evaluate(self, data: dict) -> Optional[dict]:
         symbol = data.get('symbol')
         price = data.get('price')
-        if not symbol or price is None:
+        history = data.get('ohlc_history') or []
+        if not symbol or price is None or not history:
             return None
-
-        history = self._history[symbol]
-        history.append(price)
 
         if self._cooldown[symbol] > 0:
             self._cooldown[symbol] -= 1
@@ -227,7 +238,8 @@ class _DirectionalDebitStrategy(Strategy):
         if iv_rank > self.MAX_IV_RANK:
             return None
 
-        if not self._momentum_confirms(history):
+        pattern = self._detect_pattern(history)
+        if pattern is None:
             return None
 
         contract = (self._build_signal_from_chain(symbol)
@@ -236,7 +248,12 @@ class _DirectionalDebitStrategy(Strategy):
         # Max risk on a long option = premium paid * 100 (per contract)
         risk_per_unit = round(contract["premium"] * 100, 2)
 
-        self._cooldown[symbol] = self.COOLDOWN_TICKS
+        self._cooldown[symbol] = self.COOLDOWN_BARS
+
+        rationale = (
+            f"{pattern.name} ({pattern.bias.lower()}, fuerza {pattern.strength}/3) "
+            f"detectado en {symbol}. {pattern.description}"
+        )
 
         return {
             "strategy": "LONG_CALL" if self.OPTION_TYPE == "CALL" else "LONG_PUT",
@@ -254,6 +271,15 @@ class _DirectionalDebitStrategy(Strategy):
             "risk_per_unit": risk_per_unit,
             "dte": contract["dte"],
             "source": contract["source"],
+            # Candlestick rationale: forwarded all the way through the bus so
+            # PortfolioManager can persist it and the chart generator can
+            # annotate the entry.
+            "pattern_name": pattern.name,
+            "pattern_strength": pattern.strength,
+            "pattern_bars_back": pattern.bars_back,
+            "rationale": rationale,
+            "ohlc_history": list(history),
+            "spot_at_entry": price,
         }
 
     def on_market_data(self, event: Event):
@@ -265,13 +291,14 @@ class _DirectionalDebitStrategy(Strategy):
 class LongCallStrategy(_DirectionalDebitStrategy):
     """Long Call (debit):
     - Thesis: Bullish.
-    - Setup: BUY ~30-40 delta call (chain) or 2% OTM (fallback) when fast MA
-      > slow MA and IV rank is moderate.
+    - Setup: BUY ~30-40 delta call when a bullish candlestick pattern
+      (Morning Star, Bullish Engulfing, Piercing Line, Hammer) prints on
+      the daily and IV rank is moderate.
     - Risk: limited to premium paid; profit theoretically unlimited.
     - Exit (handled by ExitManager): +100% on premium, -50% stop, or DTE < 7.
     """
     OPTION_TYPE = "CALL"
-    BIAS_DIRECTION = 1
+    BIAS = "BULLISH"
 
     def __init__(self, event_bus: EventBus, market_data_client=None):
         super().__init__("LongCall", event_bus, market_data_client)
@@ -280,12 +307,13 @@ class LongCallStrategy(_DirectionalDebitStrategy):
 class LongPutStrategy(_DirectionalDebitStrategy):
     """Long Put (debit):
     - Thesis: Bearish.
-    - Setup: BUY ~30-40 delta put (chain) or 2% OTM (fallback) when fast MA
-      < slow MA and IV rank is moderate.
+    - Setup: BUY ~30-40 delta put when a bearish candlestick pattern
+      (Evening Star, Bearish Engulfing, Dark Cloud Cover, Shooting Star)
+      prints on the daily and IV rank is moderate.
     - Risk: limited to premium paid.
     """
     OPTION_TYPE = "PUT"
-    BIAS_DIRECTION = -1
+    BIAS = "BEARISH"
 
     def __init__(self, event_bus: EventBus, market_data_client=None):
         super().__init__("LongPut", event_bus, market_data_client)

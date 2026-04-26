@@ -9,21 +9,59 @@ from src.strategies.options_strategies import LongCallStrategy, LongPutStrategy
 
 
 def _run_simulation(bus: EventBus):
-    """Synthetic tick loop. Used for offline development / smoke tests."""
+    """Synthetic tick loop. Used for offline development / smoke tests.
+
+    Builds plausible OHLC bars by simulating intra-bar high/low spread,
+    so candlestick-pattern strategies have something to recognize. Bar 16
+    on each symbol is a deliberately engineered Bullish/Bearish Engulfing
+    so the demo always fires at least one pattern entry.
+    """
+    from datetime import datetime, timedelta
     symbols = ["XLF", "SOFI", "F"]
     prices = {"XLF": 45.0, "SOFI": 12.0, "F": 11.0}
-    drift = {"XLF": 1, "SOFI": -1, "F": 1}  # +1 up, -1 down
+    drift = {"XLF": 1, "SOFI": -1, "F": 1}  # +1 up, -1 down for engulfing forge
+    history = {sym: [] for sym in symbols}
+    base_date = datetime.now() - timedelta(days=20)
 
     for i in range(20):
         print(f"\n--- Tick {i} ---")
         for sym in symbols:
             noise = (time.time() % 1) - 0.5
-            prices[sym] += drift[sym] * 0.05 + noise * 0.02
+            d = drift[sym]
+            prev_close = prices[sym]
+
+            if i == 15:
+                # Trend continuation candle (small body in trend direction)
+                # so tick 16 can engulf it as a textbook reversal.
+                close = prev_close + d * 0.10
+                open_ = prev_close - d * 0.02
+            elif i == 16:
+                # Reversal engulfing: gap further in trend direction on open,
+                # then close past prior bar's open in the opposite direction.
+                last = history[sym][-1]
+                open_ = last["close"] + d * 0.05
+                close = last["open"] - d * 0.40
+            else:
+                close = prev_close + d * 0.05 + noise * 0.02
+                open_ = prev_close + noise * 0.01
+
+            high = max(open_, close) + abs(noise) * 0.05 + 0.02
+            low = min(open_, close) - abs(noise) * 0.05 - 0.02
+            prices[sym] = close
+
+            bar = {
+                "timestamp": base_date + timedelta(days=i),
+                "open": open_, "high": high, "low": low, "close": close,
+            }
+            history[sym].append(bar)
+            history[sym] = history[sym][-30:]
+
             payload = {
                 "symbol": sym,
-                "price": prices[sym],
+                "price": close,
                 "iv_rank": 25 + (i % 10),
-                "adx": 22,
+                "open": open_, "high": high, "low": low, "close": close,
+                "ohlc_history": list(history[sym]),
             }
             bus.publish(Event(EventType.MARKET_DATA, payload))
             bus.publish(Event(EventType.DAILY_BAR, payload))

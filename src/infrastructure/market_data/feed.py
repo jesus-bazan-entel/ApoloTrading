@@ -7,8 +7,8 @@ publishes events on the bus:
   positions intraday (stop-loss / profit-target on the next 15 minutes
   rather than waiting for the close).
 - DAILY_BAR: once per calendar day per symbol, on the first poll of a
-  new trading day. Used by the entry strategies (LongCall/LongPut),
-  whose theses operate on a multi-day timeframe.
+  new trading day. Carries the full prior-day OHLC and a 30-bar history
+  so candlestick-pattern strategies can run.
 """
 import logging
 import time
@@ -44,6 +44,30 @@ class LiveDataFeed:
     def stop(self):
         self._stop = True
 
+    # ------------------------------------------------------------------
+    def _fetch_daily_history(self, symbol: str, bars: int = 30) -> List[dict]:
+        """Pull the last `bars` daily OHLC rows from yfinance."""
+        try:
+            import yfinance as yf
+            hist = yf.Ticker(symbol).history(period=f"{bars + 5}d", interval="1d")
+            if hist is None or hist.empty:
+                return []
+            hist = hist.tail(bars)
+            return [
+                {
+                    "timestamp": idx.to_pydatetime(),
+                    "open": float(row["Open"]),
+                    "high": float(row["High"]),
+                    "low": float(row["Low"]),
+                    "close": float(row["Close"]),
+                }
+                for idx, row in hist.iterrows()
+            ]
+        except Exception as e:
+            logger.warning(f"Could not fetch daily history for {symbol}: {e}")
+            return []
+
+    # ------------------------------------------------------------------
     def run(self, max_ticks: Optional[int] = None):
         """Block and stream. Set max_ticks for finite runs (e.g. tests)."""
         logger.info(f"LiveDataFeed starting for {self.symbols} "
@@ -70,11 +94,23 @@ class LiveDataFeed:
                 # Always publish the intraday tick for the ExitManager.
                 self.bus.publish(Event(EventType.MARKET_DATA, payload))
 
-                # Once per trading day per symbol, also publish a DAILY_BAR
-                # event so the entry strategies wake up.
+                # On the first poll of a new trading day, re-fetch daily
+                # OHLC and emit a DAILY_BAR. The 30-bar history is enough
+                # context for our 3-bar-max patterns.
                 if self._last_daily_bar.get(sym) != today:
                     self._last_daily_bar[sym] = today
-                    self.bus.publish(Event(EventType.DAILY_BAR, payload))
+                    history = self._fetch_daily_history(sym, bars=30)
+                    if history:
+                        last = history[-1]
+                        daily_payload = {
+                            **payload,
+                            "open": last["open"],
+                            "high": last["high"],
+                            "low": last["low"],
+                            "close": last["close"],
+                            "ohlc_history": history,
+                        }
+                        self.bus.publish(Event(EventType.DAILY_BAR, daily_payload))
 
             if max_ticks is not None and self._tick_count >= max_ticks:
                 break

@@ -58,7 +58,12 @@ class Trade(Base):
     
     # Risk
     max_risk = Column(Float, nullable=False)     # Max loss potential
-    
+
+    # Candlestick rationale persisted at entry (didactic visual analysis)
+    entry_pattern = Column(String, nullable=True)
+    entry_rationale = Column(String, nullable=True)
+    chart_path = Column(String, nullable=True)
+
     legs = relationship("Leg", back_populates="trade", cascade="all, delete-orphan")
 
     def __repr__(self):
