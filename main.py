@@ -19,12 +19,14 @@ def _run_simulation(bus: EventBus):
         for sym in symbols:
             noise = (time.time() % 1) - 0.5
             prices[sym] += drift[sym] * 0.05 + noise * 0.02
-            bus.publish(Event(EventType.MARKET_DATA, {
+            payload = {
                 "symbol": sym,
                 "price": prices[sym],
                 "iv_rank": 25 + (i % 10),
                 "adx": 22,
-            }))
+            }
+            bus.publish(Event(EventType.MARKET_DATA, payload))
+            bus.publish(Event(EventType.DAILY_BAR, payload))
         time.sleep(0.2)
 
 

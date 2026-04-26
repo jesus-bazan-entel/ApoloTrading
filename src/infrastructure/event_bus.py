@@ -17,6 +17,7 @@ logger = logging.getLogger("EventBus")
 
 class EventType(Enum):
     MARKET_DATA = "MARKET_DATA"
+    DAILY_BAR = "DAILY_BAR"
     SIGNAL = "SIGNAL"
     ORDER_REQUEST = "ORDER_REQUEST"
     ORDER_FILL = "ORDER_FILL"

@@ -142,12 +142,16 @@ class BacktestEngine:
             ivr = float(row["iv_rank"]) if not math.isnan(row["iv_rank"]) else 50.0
             self.bt_client.update(self.symbol, ts.to_pydatetime(), spot, sigma)
 
-            self.bus.publish(Event(EventType.MARKET_DATA, {
+            payload = {
                 "symbol": self.symbol,
                 "price": spot,
                 "iv_rank": ivr,
                 "timestamp": ts.to_pydatetime(),
-            }))
+            }
+            # ExitManager reacts to MARKET_DATA first so any close on this
+            # bar is realized before strategies evaluate new entries.
+            self.bus.publish(Event(EventType.MARKET_DATA, payload))
+            self.bus.publish(Event(EventType.DAILY_BAR, payload))
 
             latest = (self.session.query(AccountState)
                       .order_by(AccountState.id.desc()).first())

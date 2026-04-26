@@ -1,11 +1,18 @@
 """Real-time(ish) market data feed.
 
-Polls yfinance for spot price (and once per N polls for IV rank), then
-publishes MARKET_DATA events on the bus. Designed to drop in where the
-simulated tick loop lived in main.py.
+Polls yfinance for spot price (and once per N polls for IV rank) and
+publishes events on the bus:
+
+- MARKET_DATA: every poll cycle. Used by ExitManager to monitor open
+  positions intraday (stop-loss / profit-target on the next 15 minutes
+  rather than waiting for the close).
+- DAILY_BAR: once per calendar day per symbol, on the first poll of a
+  new trading day. Used by the entry strategies (LongCall/LongPut),
+  whose theses operate on a multi-day timeframe.
 """
 import logging
 import time
+from datetime import date
 from typing import Dict, List, Optional
 
 from src.infrastructure.event_bus import Event, EventBus, EventType
@@ -19,7 +26,7 @@ class LiveDataFeed:
         self,
         event_bus: EventBus,
         symbols: List[str],
-        poll_seconds: float = 30.0,
+        poll_seconds: float = 900.0,   # 15 min default for intraday exits
         iv_refresh_every: int = 20,
         client: Optional[MarketDataClient] = None,
     ):
@@ -30,6 +37,7 @@ class LiveDataFeed:
         self.client = client or MarketDataClient()
 
         self._iv_cache: Dict[str, float] = {}
+        self._last_daily_bar: Dict[str, date] = {}
         self._tick_count = 0
         self._stop = False
 
@@ -42,6 +50,7 @@ class LiveDataFeed:
                     f"every {self.poll_seconds}s")
         while not self._stop:
             self._tick_count += 1
+            today = date.today()
             for sym in self.symbols:
                 price = self.client.get_current_price(sym)
                 if price <= 0:
@@ -52,11 +61,20 @@ class LiveDataFeed:
                         or self._tick_count % self.iv_refresh_every == 1):
                     self._iv_cache[sym] = self.client.get_iv_rank(sym)
 
-                self.bus.publish(Event(EventType.MARKET_DATA, {
+                payload = {
                     "symbol": sym,
                     "price": price,
                     "iv_rank": self._iv_cache[sym],
-                }))
+                }
+
+                # Always publish the intraday tick for the ExitManager.
+                self.bus.publish(Event(EventType.MARKET_DATA, payload))
+
+                # Once per trading day per symbol, also publish a DAILY_BAR
+                # event so the entry strategies wake up.
+                if self._last_daily_bar.get(sym) != today:
+                    self._last_daily_bar[sym] = today
+                    self.bus.publish(Event(EventType.DAILY_BAR, payload))
 
             if max_ticks is not None and self._tick_count >= max_ticks:
                 break

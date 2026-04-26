@@ -160,7 +160,9 @@ class _DirectionalDebitStrategy(Strategy):
         )
         self._cooldown: Dict[str, int] = defaultdict(int)
         self.market_data = market_data_client  # optional: real chain lookups
-        self.bus.subscribe(EventType.MARKET_DATA, self.on_market_data)
+        # Long Call/Put are multi-day theses. Only consider entries on the
+        # daily bar; intraday MARKET_DATA ticks are handled by ExitManager.
+        self.bus.subscribe(EventType.DAILY_BAR, self.on_market_data)
 
     def _momentum_confirms(self, prices: Deque[float]) -> bool:
         if len(prices) < self.SLOW_MA:
