@@ -28,8 +28,9 @@ class RiskManager:
         self.bus.subscribe(EventType.SIGNAL, self.on_signal)
 
     def _get_current_risk_state(self) -> AccountState:
-        # Get latest state from DB
-        state = self.db.query(AccountState).order_by(AccountState.timestamp.desc()).first()
+        # Get latest state by insertion order (id) so backtests with
+        # simulated past timestamps still see their latest synthetic state.
+        state = self.db.query(AccountState).order_by(AccountState.id.desc()).first()
         if not state:
             # Initial State based on configured starting capital
             return AccountState(

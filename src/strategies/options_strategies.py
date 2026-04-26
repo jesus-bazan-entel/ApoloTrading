@@ -140,21 +140,26 @@ class _DirectionalDebitStrategy(Strategy):
 
     OPTION_TYPE: str = "CALL"   # overridden by subclasses
     BIAS_DIRECTION: int = 1     # +1 bullish (call), -1 bearish (put)
-    OTM_PCT: float = 0.02       # how far OTM to buy (2% by default)
-    PREMIUM_PCT: float = 0.012  # rough premium estimate as % of spot
+    OTM_PCT: float = 0.02       # how far OTM (heuristic fallback)
+    PREMIUM_PCT: float = 0.012  # rough premium estimate as % of spot (fallback)
     MAX_IV_RANK: float = 50.0   # skip when IV is too rich
+    TARGET_DELTA: float = 0.35  # ~30-40 delta for long options
+    MIN_DTE: int = 30
+    MAX_DTE: int = 45
 
     HISTORY_LEN: int = 10
     FAST_MA: int = 3
     SLOW_MA: int = 8
     COOLDOWN_TICKS: int = 5     # avoid stacking signals on every tick
 
-    def __init__(self, name: str, event_bus: EventBus):
+    def __init__(self, name: str, event_bus: EventBus,
+                 market_data_client=None):
         super().__init__(name, event_bus)
         self._history: Dict[str, Deque[float]] = defaultdict(
             lambda: deque(maxlen=self.HISTORY_LEN)
         )
         self._cooldown: Dict[str, int] = defaultdict(int)
+        self.market_data = market_data_client  # optional: real chain lookups
         self.bus.subscribe(EventType.MARKET_DATA, self.on_market_data)
 
     def _momentum_confirms(self, prices: Deque[float]) -> bool:
@@ -164,6 +169,44 @@ class _DirectionalDebitStrategy(Strategy):
         slow = sum(list(prices)[-self.SLOW_MA:]) / self.SLOW_MA
         # Bullish: fast > slow. Bearish: fast < slow.
         return (fast - slow) * self.BIAS_DIRECTION > 0
+
+    def _build_signal_from_chain(self, symbol: str) -> Optional[dict]:
+        """Try to pick a real contract by delta. None if data not available."""
+        if self.market_data is None:
+            return None
+        opt_type = "call" if self.OPTION_TYPE == "CALL" else "put"
+        contract = self.market_data.find_option_by_delta(
+            symbol,
+            option_type=opt_type,
+            target_delta=self.TARGET_DELTA,
+            min_dte=self.MIN_DTE,
+            max_dte=self.MAX_DTE,
+        )
+        if not contract:
+            return None
+        return {
+            "strike": contract["strike"],
+            "premium": contract["premium"],
+            "expiration": contract["expiration"],
+            "delta": contract["delta"],
+            "dte": contract["dte"],
+            "iv": contract["iv"],
+            "source": "chain",
+        }
+
+    def _build_signal_heuristic(self, symbol: str, price: float) -> dict:
+        """Fallback when the option chain is unavailable (offline/sim)."""
+        strike = price * (1 + self.OTM_PCT * self.BIAS_DIRECTION)
+        premium = round(price * self.PREMIUM_PCT, 2)
+        return {
+            "strike": round(strike, 2),
+            "premium": premium,
+            "expiration": None,
+            "delta": None,
+            "dte": None,
+            "iv": None,
+            "source": "heuristic",
+        }
 
     def evaluate(self, data: dict) -> Optional[dict]:
         symbol = data.get('symbol')
@@ -178,21 +221,18 @@ class _DirectionalDebitStrategy(Strategy):
             self._cooldown[symbol] -= 1
             return None
 
-        # Filter 1: IV must not be too rich
         iv_rank = data.get('iv_rank', 0)
         if iv_rank > self.MAX_IV_RANK:
             return None
 
-        # Filter 2: directional momentum must confirm
         if not self._momentum_confirms(history):
             return None
 
-        # Strike selection: slightly OTM in the direction of the bias
-        strike = price * (1 + self.OTM_PCT * self.BIAS_DIRECTION)
-        # Premium estimate (very rough; real data would use the chain)
-        premium = round(price * self.PREMIUM_PCT, 2)
+        contract = (self._build_signal_from_chain(symbol)
+                    or self._build_signal_heuristic(symbol, price))
+
         # Max risk on a long option = premium paid * 100 (per contract)
-        risk_per_unit = round(premium * 100, 2)
+        risk_per_unit = round(contract["premium"] * 100, 2)
 
         self._cooldown[symbol] = self.COOLDOWN_TICKS
 
@@ -200,11 +240,18 @@ class _DirectionalDebitStrategy(Strategy):
             "strategy": "LONG_CALL" if self.OPTION_TYPE == "CALL" else "LONG_PUT",
             "symbol": symbol,
             "side": "BUY",  # debit trade: we are paying the premium
-            "legs": [
-                {"side": "BUY", "type": self.OPTION_TYPE, "strike": round(strike, 2)}
-            ],
-            "limit_price": premium,
+            "legs": [{
+                "side": "BUY",
+                "type": self.OPTION_TYPE,
+                "strike": contract["strike"],
+                "expiration": contract["expiration"],
+                "iv": contract["iv"],
+                "delta": contract["delta"],
+            }],
+            "limit_price": contract["premium"],
             "risk_per_unit": risk_per_unit,
+            "dte": contract["dte"],
+            "source": contract["source"],
         }
 
     def on_market_data(self, event: Event):
@@ -216,28 +263,30 @@ class _DirectionalDebitStrategy(Strategy):
 class LongCallStrategy(_DirectionalDebitStrategy):
     """Long Call (debit):
     - Thesis: Bullish.
-    - Setup: BUY ~2% OTM call when fast MA > slow MA and IV rank is moderate.
+    - Setup: BUY ~30-40 delta call (chain) or 2% OTM (fallback) when fast MA
+      > slow MA and IV rank is moderate.
     - Risk: limited to premium paid; profit theoretically unlimited.
-    - Exit (handled elsewhere): +50-100% on premium, -50% stop, or DTE.
+    - Exit (handled by ExitManager): +100% on premium, -50% stop, or DTE < 7.
     """
     OPTION_TYPE = "CALL"
     BIAS_DIRECTION = 1
 
-    def __init__(self, event_bus: EventBus):
-        super().__init__("LongCall", event_bus)
+    def __init__(self, event_bus: EventBus, market_data_client=None):
+        super().__init__("LongCall", event_bus, market_data_client)
 
 
 class LongPutStrategy(_DirectionalDebitStrategy):
     """Long Put (debit):
     - Thesis: Bearish.
-    - Setup: BUY ~2% OTM put when fast MA < slow MA and IV rank is moderate.
+    - Setup: BUY ~30-40 delta put (chain) or 2% OTM (fallback) when fast MA
+      < slow MA and IV rank is moderate.
     - Risk: limited to premium paid.
     """
     OPTION_TYPE = "PUT"
     BIAS_DIRECTION = -1
 
-    def __init__(self, event_bus: EventBus):
-        super().__init__("LongPut", event_bus)
+    def __init__(self, event_bus: EventBus, market_data_client=None):
+        super().__init__("LongPut", event_bus, market_data_client)
 
 
 class BearCallSpreadStrategy(Strategy):

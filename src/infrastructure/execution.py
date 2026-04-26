@@ -1,52 +1,60 @@
 import logging
-import uuid
-from typing import Dict
-from src.infrastructure.event_bus import EventBus, Event, EventType
+from typing import Optional
+
+from src.config import config
+from src.infrastructure.broker import BrokerAdapter, OrderRequest, build_broker
+from src.infrastructure.event_bus import Event, EventBus, EventType
 
 logger = logging.getLogger("ExecutionEngine")
 
+
 class ExecutionEngine:
-    """
-    Handles Order Execution.
-    Modes:
-    - PAPER: Simulates fills locally.
-    - LIVE: Connects to Broker API (TODO).
-    """
-    def __init__(self, event_bus: EventBus, mode: str = "PAPER"):
+    """Routes ORDER_REQUEST events through a BrokerAdapter and publishes the
+    resulting ORDER_FILL. The broker is selected via config.BROKER (PAPER /
+    ALPACA). Pass a broker explicitly to override (used by tests/backtests)."""
+
+    def __init__(self, event_bus: EventBus, broker: Optional[BrokerAdapter] = None):
         self.bus = event_bus
-        self.mode = mode
-        self.active_orders: Dict[str, dict] = {}
-        
+        self.broker = broker or build_broker(config.BROKER)
+        logger.info(f"ExecutionEngine using broker={self.broker.name}")
         self.bus.subscribe(EventType.ORDER_REQUEST, self.on_order_request)
 
     def on_order_request(self, event: Event):
         order_req = event.data
-        logger.info(f"Received Order Request: {order_req}")
-        
-        if self.mode == "PAPER":
-            self._execute_paper(order_req)
-        else:
-            self._execute_live(order_req)
+        logger.info(f"Order request: {order_req}")
 
-    def _execute_paper(self, order_req: dict):
-        # Simulate Order Placement
-        order_id = str(uuid.uuid4())
-        logger.info(f"PAPER TRADING: Placing order {order_id} for {order_req['symbol']}")
+        order = OrderRequest(
+            symbol=order_req["symbol"],
+            side=order_req["side"],
+            quantity=int(order_req["quantity"]),
+            limit_price=float(order_req["price"]),
+            legs=order_req.get("legs") or [],
+            strategy=order_req.get("strategy"),
+            closing_trade_id=order_req.get("closing_trade_id"),
+            exit_reason=order_req.get("exit_reason"),
+        )
 
-        # Simulate Immediate Fill for now (In real paper trading, we'd wait for price match)
-        fill_event = Event(EventType.ORDER_FILL, {
-            "order_id": order_id,
-            "signal_id": order_req.get('signal_id'),
-            "symbol": order_req['symbol'],
-            "strategy": order_req.get('strategy'),
-            "side": order_req.get('side'),
-            "legs": order_req.get('legs'),
-            "filled_quantity": order_req['quantity'],
-            "fill_price": order_req['price'], # Filled at limit
-            "commission": 1.05 * order_req['quantity'], # Mock commission
+        result = self.broker.place_order(order)
+        if not result.accepted:
+            logger.error(f"Broker rejected order: {result.error}")
+            self.bus.publish(Event(EventType.ERROR, {
+                "origin": "ExecutionEngine",
+                "message": result.error,
+                "order": order_req,
+            }))
+            return
+
+        self.bus.publish(Event(EventType.ORDER_FILL, {
+            "order_id": result.order_id,
+            "signal_id": order_req.get("signal_id"),
+            "symbol": order.symbol,
+            "strategy": order.strategy,
+            "side": order.side,
+            "legs": order.legs,
+            "filled_quantity": result.filled_quantity,
+            "fill_price": result.fill_price,
+            "commission": result.commission,
+            "closing_trade_id": order.closing_trade_id,
+            "exit_reason": order.exit_reason,
             "timestamp": None,
-        })
-        self.bus.publish(fill_event)
-
-    def _execute_live(self, order_req: dict):
-        raise NotImplementedError("Live Trading adapters (IBKR/Alpaca) not yet implemented.")
+        }))

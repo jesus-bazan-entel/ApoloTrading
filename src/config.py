@@ -24,4 +24,22 @@ class Config:
     # 2% sizing rule rounds to 0 contracts (lets small accounts open 1 lot).
     SINGLE_TRADE_HARD_CAP_PCT = float(os.getenv("SINGLE_TRADE_HARD_CAP_PCT", "0.10"))
 
+    # Runtime mode. SIMULATION = synthetic tick loop (default; deterministic).
+    # LIVE_DATA = poll yfinance for real prices/IV and publish to bus.
+    # BACKTEST = run BacktestEngine over historical data.
+    MODE = os.getenv("MODE", "SIMULATION").upper()
+
+    # LIVE_DATA settings
+    LIVE_SYMBOLS = [s.strip() for s in os.getenv("LIVE_SYMBOLS", "XLF,SOFI,F").split(",") if s.strip()]
+    LIVE_POLL_SECONDS = float(os.getenv("LIVE_POLL_SECONDS", "30"))
+    LIVE_MAX_TICKS = int(os.getenv("LIVE_MAX_TICKS", "0"))  # 0 = run forever
+
+    # Broker selection (PAPER, ALPACA). Live broker is opt-in.
+    BROKER = os.getenv("BROKER", "PAPER").upper()
+
+    # Exit rules for long debit trades
+    PROFIT_TARGET_PCT = float(os.getenv("PROFIT_TARGET_PCT", "1.0"))   # +100% on premium
+    STOP_LOSS_PCT = float(os.getenv("STOP_LOSS_PCT", "0.5"))           # -50% on premium
+    DTE_EXIT_DAYS = int(os.getenv("DTE_EXIT_DAYS", "7"))               # close if DTE < 7
+
 config = Config()
