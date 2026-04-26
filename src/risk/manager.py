@@ -128,6 +128,8 @@ class RiskManager:
             "rationale": signal.get('rationale'),
             "ohlc_history": signal.get('ohlc_history'),
             "spot_at_entry": signal.get('spot_at_entry'),
+            "bracket_pct": signal.get('bracket_pct'),
+            "overlays": signal.get('overlays'),
         })
         print(f"RISK APPROVED: {quantity} cons for {signal.get('symbol')} "
               f"({signal.get('pattern_name')})")

@@ -37,9 +37,17 @@ class Config:
     # Broker selection (PAPER, ALPACA). Live broker is opt-in.
     BROKER = os.getenv("BROKER", "PAPER").upper()
 
-    # Exit rules for long debit trades
+    # Exit rules for long debit trades (used when a trade does not carry
+    # its own bracket_pct — the SPY playbook overrides these per trade).
     PROFIT_TARGET_PCT = float(os.getenv("PROFIT_TARGET_PCT", "1.0"))   # +100% on premium
     STOP_LOSS_PCT = float(os.getenv("STOP_LOSS_PCT", "0.5"))           # -50% on premium
-    DTE_EXIT_DAYS = int(os.getenv("DTE_EXIT_DAYS", "7"))               # close if DTE < 7
+    DTE_EXIT_DAYS = int(os.getenv("DTE_EXIT_DAYS", "1"))               # close if DTE <= 1
+
+    # Which entry strategies to load:
+    #   PATTERNS = legacy LongCall/LongPut on candlestick patterns (multi-symbol)
+    #   PLAYBOOK = SPY M4 (PUT) + RCB (CALL) with ATM strike & ~2-day DTE
+    #   ALL      = both
+    STRATEGY_SET = os.getenv("STRATEGY_SET", "PLAYBOOK").upper()
+    PLAYBOOK_SYMBOLS = [s.strip() for s in os.getenv("PLAYBOOK_SYMBOLS", "SPY").split(",") if s.strip()]
 
 config = Config()

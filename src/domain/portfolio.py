@@ -125,6 +125,7 @@ class PortfolioManager:
                     entry_spot=float(data.get("spot_at_entry") or 0.0),
                     strike=float(first_leg.get("strike", 0.0)),
                     expiration=first_leg.get("expiration"),
+                    overlays=data.get("overlays"),
                 )
                 if path:
                     trade.chart_path = path

@@ -64,5 +64,7 @@ class ExecutionEngine:
             "rationale": order_req.get("rationale"),
             "ohlc_history": order_req.get("ohlc_history"),
             "spot_at_entry": order_req.get("spot_at_entry"),
+            "bracket_pct": order_req.get("bracket_pct"),
+            "overlays": order_req.get("overlays"),
             "timestamp": None,
         }))

@@ -105,7 +105,14 @@ class BacktestEngine:
         )
         ExecutionEngine(self.bus, broker=PaperBroker())
         for cls in self.strategy_classes:
-            cls(self.bus, market_data_client=self.bt_client)
+            # Playbook strategies take a `symbols` kwarg so we can scope the
+            # backtest to whatever ticker we are replaying. Legacy
+            # LongCall/LongPut don't, so we fall back gracefully.
+            try:
+                cls(self.bus, market_data_client=self.bt_client,
+                    symbols=[self.symbol])
+            except TypeError:
+                cls(self.bus, market_data_client=self.bt_client)
 
     # ------------------------------------------------------------------
     def _load_history(self) -> pd.DataFrame:
@@ -117,7 +124,7 @@ class BacktestEngine:
         # MultiIndex columns for multi-ticker downloads.
         if isinstance(df.columns, pd.MultiIndex):
             df = df.xs(self.symbol, axis=1, level=1)
-        df = df[["Open", "High", "Low", "Close"]].dropna()
+        df = df[["Open", "High", "Low", "Close", "Volume"]].dropna()
         df["ret"] = df["Close"].pct_change()
         df["vol_20"] = df["ret"].rolling(20).std() * math.sqrt(252)
         # 252-day rolling IV-rank proxy
@@ -143,14 +150,16 @@ class BacktestEngine:
             ivr = float(row["iv_rank"]) if not math.isnan(row["iv_rank"]) else 50.0
             self.bt_client.update(self.symbol, ts.to_pydatetime(), spot, sigma)
 
+            volume = float(row["Volume"]) if not math.isnan(row["Volume"]) else 0.0
             ohlc_history.append({
                 "timestamp": ts.to_pydatetime(),
                 "open": float(row["Open"]),
                 "high": float(row["High"]),
                 "low": float(row["Low"]),
                 "close": spot,
+                "volume": volume,
             })
-            ohlc_history = ohlc_history[-30:]  # keep last 30 bars context
+            ohlc_history = ohlc_history[-80:]  # keep enough bars for EMA50 + MACD
 
             payload = {
                 "symbol": self.symbol,
@@ -161,6 +170,7 @@ class BacktestEngine:
                 "high": float(row["High"]),
                 "low": float(row["Low"]),
                 "close": spot,
+                "volume": volume,
                 "ohlc_history": list(ohlc_history),
             }
             # ExitManager reacts to MARKET_DATA first so any close on this

@@ -35,6 +35,7 @@ class OpenPosition:
     entry_price: float
     quantity: int
     iv_at_entry: Optional[float]
+    bracket_pct: Optional[float] = None  # per-trade override (SPY playbook = 0.10)
 
 
 class ExitManager:
@@ -92,6 +93,7 @@ class ExitManager:
             entry_price=float(data.get("fill_price", 0.0)),
             quantity=int(data.get("filled_quantity") or data.get("quantity") or 1),
             iv_at_entry=leg.get("iv"),
+            bracket_pct=data.get("bracket_pct"),
         )
         logger.info(f"Tracking position trade_id={trade_id} {self.positions[trade_id]}")
 
@@ -142,9 +144,15 @@ class ExitManager:
         return round(max(intrinsic_now, pos.entry_price * 0.9), 2)
 
     def _exit_reason(self, pos: OpenPosition, current: float) -> Optional[str]:
-        if current >= pos.entry_price * (1 + config.PROFIT_TARGET_PCT):
+        # Per-trade bracket overrides the global profit/stop pcts when set.
+        if pos.bracket_pct is not None:
+            target_pct = stop_pct = pos.bracket_pct
+        else:
+            target_pct = config.PROFIT_TARGET_PCT
+            stop_pct = config.STOP_LOSS_PCT
+        if current >= pos.entry_price * (1 + target_pct):
             return "PROFIT_TARGET"
-        if current <= pos.entry_price * (1 - config.STOP_LOSS_PCT):
+        if current <= pos.entry_price * (1 - stop_pct):
             return "STOP_LOSS"
         if pos.expiration is not None:
             dte = (pos.expiration - self._now()).days

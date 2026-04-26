@@ -45,11 +45,12 @@ class LiveDataFeed:
         self._stop = True
 
     # ------------------------------------------------------------------
-    def _fetch_daily_history(self, symbol: str, bars: int = 30) -> List[dict]:
-        """Pull the last `bars` daily OHLC rows from yfinance."""
+    def _fetch_daily_history(self, symbol: str, bars: int = 80) -> List[dict]:
+        """Pull the last `bars` daily OHLC+Volume rows from yfinance.
+        Default 80 bars so EMA50 and MACD have enough warmup."""
         try:
             import yfinance as yf
-            hist = yf.Ticker(symbol).history(period=f"{bars + 5}d", interval="1d")
+            hist = yf.Ticker(symbol).history(period=f"{bars + 10}d", interval="1d")
             if hist is None or hist.empty:
                 return []
             hist = hist.tail(bars)
@@ -60,6 +61,7 @@ class LiveDataFeed:
                     "high": float(row["High"]),
                     "low": float(row["Low"]),
                     "close": float(row["Close"]),
+                    "volume": float(row.get("Volume") or 0.0),
                 }
                 for idx, row in hist.iterrows()
             ]
@@ -99,7 +101,7 @@ class LiveDataFeed:
                 # context for our 3-bar-max patterns.
                 if self._last_daily_bar.get(sym) != today:
                     self._last_daily_bar[sym] = today
-                    history = self._fetch_daily_history(sym, bars=30)
+                    history = self._fetch_daily_history(sym, bars=80)
                     if history:
                         last = history[-1]
                         daily_payload = {
@@ -108,6 +110,7 @@ class LiveDataFeed:
                             "high": last["high"],
                             "low": last["low"],
                             "close": last["close"],
+                            "volume": last.get("volume", 0.0),
                             "ohlc_history": history,
                         }
                         self.bus.publish(Event(EventType.DAILY_BAR, daily_payload))

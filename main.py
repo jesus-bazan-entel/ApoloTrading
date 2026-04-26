@@ -6,6 +6,7 @@ from src.infrastructure.event_bus import Event, EventBus, EventType
 from src.infrastructure.execution import ExecutionEngine
 from src.risk.manager import RiskManager
 from src.strategies.options_strategies import LongCallStrategy, LongPutStrategy
+from src.strategies.spy_playbook import M4Strategy, RCBStrategy
 
 
 def _run_simulation(bus: EventBus):
@@ -49,18 +50,21 @@ def _run_simulation(bus: EventBus):
             low = min(open_, close) - abs(noise) * 0.05 - 0.02
             prices[sym] = close
 
+            volume = 1_000_000 + abs(noise) * 500_000
             bar = {
                 "timestamp": base_date + timedelta(days=i),
                 "open": open_, "high": high, "low": low, "close": close,
+                "volume": volume,
             }
             history[sym].append(bar)
-            history[sym] = history[sym][-30:]
+            history[sym] = history[sym][-80:]
 
             payload = {
                 "symbol": sym,
                 "price": close,
                 "iv_rank": 25 + (i % 10),
                 "open": open_, "high": high, "low": low, "close": close,
+                "volume": volume,
                 "ohlc_history": list(history[sym]),
             }
             bus.publish(Event(EventType.MARKET_DATA, payload))
@@ -85,6 +89,7 @@ def _run_live_data(bus: EventBus):
 def main():
     print("Initializing Apolo Trading System (TradeMind AI)...")
     print(f"Mode: {config.MODE} | Broker: {config.BROKER} | "
+          f"Strategy set: {config.STRATEGY_SET} | "
           f"Equity: ${config.INITIAL_EQUITY:,.2f} | "
           f"Risk/trade NORMAL: {config.RISK_PCT_NORMAL:.1%}")
 
@@ -103,8 +108,14 @@ def main():
 
     execution = ExecutionEngine(bus)
 
-    long_call = LongCallStrategy(bus, market_data_client=market_data_client)
-    long_put = LongPutStrategy(bus, market_data_client=market_data_client)
+    if config.STRATEGY_SET in ("PATTERNS", "ALL"):
+        LongCallStrategy(bus, market_data_client=market_data_client)
+        LongPutStrategy(bus, market_data_client=market_data_client)
+    if config.STRATEGY_SET in ("PLAYBOOK", "ALL"):
+        M4Strategy(bus, market_data_client=market_data_client,
+                   symbols=config.PLAYBOOK_SYMBOLS)
+        RCBStrategy(bus, market_data_client=market_data_client,
+                    symbols=config.PLAYBOOK_SYMBOLS)
 
     print("System Online.")
     try:
