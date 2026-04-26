@@ -1083,3 +1083,19 @@ Traceback (most recent call last):
     if state.daily_trades_count >= self.daily_max_trades:
        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: '>=' not supported between instances of 'NoneType' and 'int'
+2026-04-26 06:56:05,605 - EventBus - INFO - Subscribed on_signal to SIGNAL
+2026-04-26 06:56:05,607 - EventBus - INFO - Subscribed on_fill to ORDER_FILL
+2026-04-26 06:56:05,607 - EventBus - INFO - Subscribed on_order_request to ORDER_REQUEST
+2026-04-26 06:56:05,608 - EventBus - INFO - Subscribed on_market_data to MARKET_DATA
+2026-04-26 06:56:05,608 - EventBus - INFO - Subscribed on_market_data to MARKET_DATA
+2026-04-26 06:56:44,763 - EventBus - INFO - Subscribed on_signal to SIGNAL
+2026-04-26 06:56:44,763 - EventBus - INFO - Subscribed on_fill to ORDER_FILL
+2026-04-26 06:56:44,764 - EventBus - INFO - Subscribed on_order_request to ORDER_REQUEST
+2026-04-26 06:56:44,764 - EventBus - INFO - Subscribed on_market_data to MARKET_DATA
+2026-04-26 06:56:44,764 - EventBus - INFO - Subscribed on_market_data to MARKET_DATA
+2026-04-26 06:56:46,175 - ExecutionEngine - INFO - Received Order Request: {'signal_id': None, 'symbol': 'XLF', 'strategy': 'LONG_CALL', 'side': 'BUY', 'quantity': 1, 'order_type': 'LIMIT', 'price': 0.54, 'legs': [{'side': 'BUY', 'type': 'CALL', 'strike': 46.32}]}
+2026-04-26 06:56:46,176 - ExecutionEngine - INFO - PAPER TRADING: Placing order f316bca3-e6b1-408c-a164-060b9be73ddb for XLF
+2026-04-26 06:56:46,185 - ExecutionEngine - INFO - Received Order Request: {'signal_id': None, 'symbol': 'SOFI', 'strategy': 'LONG_PUT', 'side': 'BUY', 'quantity': 2, 'order_type': 'LIMIT', 'price': 0.14, 'legs': [{'side': 'BUY', 'type': 'PUT', 'strike': 11.38}]}
+2026-04-26 06:56:46,185 - ExecutionEngine - INFO - PAPER TRADING: Placing order d1c29a6b-8d9b-4e13-b8fa-237c02334c35 for SOFI
+2026-04-26 06:56:46,190 - ExecutionEngine - INFO - Received Order Request: {'signal_id': None, 'symbol': 'F', 'strategy': 'LONG_CALL', 'side': 'BUY', 'quantity': 2, 'order_type': 'LIMIT', 'price': 0.14, 'legs': [{'side': 'BUY', 'type': 'CALL', 'strike': 11.64}]}
+2026-04-26 06:56:46,190 - ExecutionEngine - INFO - PAPER TRADING: Placing order 060f4a81-d8c3-44f6-87ae-051c165bd85a for F
